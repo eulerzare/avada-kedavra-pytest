@@ -1,0 +1,1 @@
+python -m grpc_tools.protoc --proto_path="$PWD/protobuf" transactions.proto --python_out="$PWD/protobuf" --grpc_python_out="$PWD/protobuf"

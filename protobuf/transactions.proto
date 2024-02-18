@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+option java_package = "avada.kedavra.grpc.transactions";
+option java_multiple_files = true;
+
+service TransactionService {
+  rpc SubmitTransaction(TransactionBulk) returns (StatusResponse) {}
+}
+
+message Empty {}
+
+message StatusResponse {
+  int32 status = 1;
+  string message = 2;
+}
+
+message TransactionBulk {
+  string uniqueId = 1;
+  uint64 timestamp = 2;
+  int64 objectId = 3;
+  string eventType = 4;
+  repeated Transaction transactions = 5;
+}
+
+message Transaction {
+  int64 number = 1;
+  float amount = 2;
+  float freezeAmount = 3;
+  string currency = 4;
+  string entity = 5;
+  string subsidiaryAccount = 6;
+  int32 entityType = 7;
+  float minAmount = 8;
+  string description = 9;
+}
