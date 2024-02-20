@@ -4,7 +4,7 @@ import grpc
 import requests
 from decouple import config
 
-from data_classes.transactions import TransactionBulk, StatusResponse
+from data_classes.transactions import TransactionBulk
 from protobuf import transactions_pb2_grpc, transactions_pb2
 
 
@@ -32,5 +32,5 @@ class BaseWebserverClient:
         self.session = requests.Session()
 
     def submit_transaction(self, request: TransactionBulk) -> Dict:
-        path = f"{self.base_url}/submit-transaction"
-        return self.session.post(path, json=request.model_dump()).json()
+        url = f"{self.base_url}/submit-transaction"
+        return self.session.post(url, json=request.model_dump()).json()

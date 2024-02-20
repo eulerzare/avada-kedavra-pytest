@@ -1,9 +1,6 @@
-import time
 from queue import Queue, Empty
 from threading import Thread
 from typing import List, Any
-
-from clients.base import BaseGrpcClient
 
 
 class ThreadingClientPool:
