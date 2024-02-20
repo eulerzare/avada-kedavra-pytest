@@ -1,3 +1,4 @@
+import time
 from queue import Queue, Empty
 from threading import Thread
 from typing import List, Any
@@ -6,9 +7,9 @@ from clients.base import BaseGrpcClient
 
 
 class ThreadingClientPool:
-    def __init__(self, num_of_workers: int):
+    def __init__(self, num_of_workers: int, client):
         self.num_of_workers = num_of_workers
-        self.clients: List[BaseGrpcClient] = [BaseGrpcClient() for _ in range(self.num_of_workers)]
+        self.clients: List[client] = [client() for _ in range(self.num_of_workers)]
         self.workers: List[Thread] = [
             Thread(target=self._worker_main_loop, args=(i,), daemon=True) for i in range(self.num_of_workers)
         ]

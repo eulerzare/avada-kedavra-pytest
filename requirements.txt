@@ -4,6 +4,8 @@
 #
 #    pip-compile requirements.in
 #
+annotated-types==0.6.0
+    # via pydantic
 asttokens==2.4.1
     # via stack-data
 backcall==0.2.0
@@ -12,6 +14,10 @@ black==24.2.0
     # via -r requirements.in
 build==1.0.3
     # via pip-tools
+certifi==2024.2.2
+    # via requests
+charset-normalizer==3.3.2
+    # via requests
 click==8.1.7
     # via
     #   black
@@ -28,6 +34,8 @@ grpcio==1.60.1
     #   grpcio-tools
 grpcio-tools==1.60.1
     # via -r requirements.in
+idna==3.6
+    # via requests
 importlib-metadata==7.0.1
     # via build
 ipython==8.12.3
@@ -66,6 +74,10 @@ pure-eval==0.2.2
     # via stack-data
 pycodestyle==2.11.1
     # via flake8
+pydantic==2.6.1
+    # via -r requirements.in
+pydantic-core==2.16.2
+    # via pydantic
 pyflakes==3.2.0
     # via flake8
 pygments==2.17.2
@@ -75,6 +87,8 @@ pyproject-hooks==1.0.0
     #   build
     #   pip-tools
 python-decouple==3.8
+    # via -r requirements.in
+requests==2.31.0
     # via -r requirements.in
 six==1.16.0
     # via asttokens
@@ -92,8 +106,13 @@ traitlets==5.14.1
     #   matplotlib-inline
 typing-extensions==4.9.0
     # via
+    #   annotated-types
     #   black
     #   ipython
+    #   pydantic
+    #   pydantic-core
+urllib3==2.2.1
+    # via requests
 wcwidth==0.2.13
     # via prompt-toolkit
 wheel==0.42.0
