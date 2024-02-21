@@ -57,7 +57,7 @@ class BaseMultiprocessTest(unittest.TestCase):
             transactions=[transaction1, transaction2, transaction3]
         )
         start_time = time.time()
-        self.multiprocessing_client.map("submit_transaction", [bulk_transaction] * 10000)
+        self.multiprocessing_client.map("submit_transaction", [bulk_transaction] * 100000)
         self.multiprocessing_client.join()
         print(time.time() - start_time)
 
@@ -104,7 +104,7 @@ class BaseMultiprocessTest(unittest.TestCase):
             transactions=[transaction1, transaction2, transaction3]
         )
         start_time = time.time()
-        self.multiprocessing_client.map("submit_transaction", [bulk_transaction] * 10000)
+        self.multiprocessing_client.map("submit_transaction", [bulk_transaction] * 100000)
         self.multiprocessing_client.join()
         print(time.time() - start_time)
 
@@ -151,6 +151,6 @@ class BaseMultiprocessTest(unittest.TestCase):
             transactions=[transaction1, transaction2, transaction3]
         )
         start_time = time.time()
-        self.multiprocessing_client.map("submit_transaction", [bulk_transaction] * 10000)
+        self.multiprocessing_client.map("submit_transaction", [bulk_transaction] * 100000)
         self.multiprocessing_client.join()
         print(time.time() - start_time)

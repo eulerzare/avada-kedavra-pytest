@@ -53,3 +53,6 @@ class BaseThriftClient:
 
     def submit_transaction(self, request: ThriftTransactionBulk):
         return self.client.submitTransaction(request)
+
+    def __del__(self):
+        self.transport.close()
