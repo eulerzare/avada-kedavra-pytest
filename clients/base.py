@@ -3,9 +3,13 @@ from typing import Dict
 import grpc
 import requests
 from decouple import config
+from thrift.protocol import TBinaryProtocol
+from thrift.transport import TSocket, TTransport
 
 from data_classes.transactions import TransactionBulk
 from protobuf import transactions_pb2_grpc, transactions_pb2
+from thrift_classes.transactions.TransactionService import Client
+from thrift_classes.transactions.ttypes import TransactionBulk as ThriftTransactionBulk
 
 
 class BaseGrpcClient:
@@ -34,3 +38,18 @@ class BaseWebserverClient:
     def submit_transaction(self, request: TransactionBulk) -> Dict:
         url = f"{self.base_url}/submit-transaction"
         return self.session.post(url, json=request.model_dump()).json()
+
+
+class BaseThriftClient:
+    def __init__(self):
+        self.host = config("THRIFT_HOST", cast=str)
+        self.port = config("THRIFT_PORT", cast=int)
+        self.transport = TSocket.TSocket(self.host, self.port)
+        self.transport = TTransport.TBufferedTransport(self.transport)
+        protocol = TBinaryProtocol.TBinaryProtocol(self.transport)
+
+        self.client = Client(protocol)
+        self.transport.open()
+
+    def submit_transaction(self, request: ThriftTransactionBulk):
+        return self.client.submitTransaction(request)
