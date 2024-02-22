@@ -1,13 +1,74 @@
 import time
 import unittest
+import uuid
+from multiprocessing import Pool
+
+from decouple import config
+from thrift.protocol import TBinaryProtocol
+from thrift.transport import TSocket, TTransport
 
 from clients.base import BaseGrpcClient, BaseWebserverClient, BaseThriftClient
 from clients.multiprocessing_pool import MultiprocessingClientPool
 from data_classes.transactions import Transaction, TransactionBulk
+from thrift_classes.transactions.TransactionService import Client
 from thrift_classes.transactions.ttypes import Transaction as ThriftTransaction
 from thrift_classes.transactions.ttypes import TransactionBulk as ThriftTransactionBulk
 
 from protobuf import transactions_pb2
+
+host = config("THRIFT_HOST", cast=str)
+port = config("THRIFT_PORT", cast=int)
+transport = TSocket.TSocket(host, port)
+transport = TTransport.TBufferedTransport(transport)
+protocol = TBinaryProtocol.TBinaryProtocol(transport)
+
+client = Client(protocol)
+transport.open()
+
+transaction1 = ThriftTransaction(
+    number=0,
+    amount=100,
+    freezeAmount=50,
+    currency="usdt",
+    entity="internal",
+    subsidiaryAccount="main",
+    entityType=1,
+    minAmount=1,
+    description="first transaction",
+)
+transaction2 = ThriftTransaction(
+    number=1,
+    amount=200,
+    freezeAmount=50,
+    currency="usdt",
+    entity="internal",
+    subsidiaryAccount="main",
+    entityType=1,
+    minAmount=1,
+    description="second transaction",
+)
+transaction3 = ThriftTransaction(
+    number=2,
+    amount=300,
+    freezeAmount=50,
+    currency="usdt",
+    entity="internal",
+    subsidiaryAccount="main",
+    entityType=1,
+    minAmount=1,
+    description="third transaction",
+)
+
+
+def to_do(unique_id):
+    request = ThriftTransactionBulk(
+        uniqueId=unique_id,
+        timestamp=1234,
+        objectId=1,
+        eventType="new",
+        transactions=[transaction1, transaction2, transaction3]
+    )
+    return client.submitTransaction(request)
 
 
 class BaseMultiprocessTest(unittest.TestCase):
@@ -154,3 +215,13 @@ class BaseMultiprocessTest(unittest.TestCase):
         self.multiprocessing_client.map("submit_transaction", [bulk_transaction] * 100000)
         self.multiprocessing_client.join()
         print(time.time() - start_time)
+
+    def test_all_unique_submitted(self):
+        list_of_ids = [str(uuid.uuid4()) for _ in range(100000)]
+        list_of_ids = list_of_ids + [list_of_ids[0], list_of_ids[1]]
+
+        pool: Pool = Pool(processes=4)
+        start_time = time.time()
+        responses = pool.map(to_do, list_of_ids)
+        print(time.time() - start_time)
+        print([(i, r.message) for i, r in enumerate(responses) if r.message != "Unique Id checked"])
