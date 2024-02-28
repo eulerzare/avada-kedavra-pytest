@@ -9,9 +9,9 @@ struct Transaction {
   2: required base.Genre genre,
   3: required base.AccountType accountType,
   4: required string currencySymbol,
-  5: required double amount,
-  6: required double freezeAmount,
-  7: required double minAmount,
+  5: required string amount,
+  6: required string freezeAmount,
+  7: required string minAmount,
 }
 
 struct TransactionBulk {

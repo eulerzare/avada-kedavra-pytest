@@ -27,6 +27,14 @@ class Iface(object):
         """
         pass
 
+    def getTradersAccounts(self, requestGetTraderAccount):
+        """
+        Parameters:
+         - requestGetTraderAccount
+
+        """
+        pass
+
 
 class Client(Iface):
     def __init__(self, iprot, oprot=None):
@@ -67,12 +75,45 @@ class Client(Iface):
             return result.success
         raise TApplicationException(TApplicationException.MISSING_RESULT, "addTrader failed: unknown result")
 
+    def getTradersAccounts(self, requestGetTraderAccount):
+        """
+        Parameters:
+         - requestGetTraderAccount
+
+        """
+        self.send_getTradersAccounts(requestGetTraderAccount)
+        return self.recv_getTradersAccounts()
+
+    def send_getTradersAccounts(self, requestGetTraderAccount):
+        self._oprot.writeMessageBegin('getTradersAccounts', TMessageType.CALL, self._seqid)
+        args = getTradersAccounts_args()
+        args.requestGetTraderAccount = requestGetTraderAccount
+        args.write(self._oprot)
+        self._oprot.writeMessageEnd()
+        self._oprot.trans.flush()
+
+    def recv_getTradersAccounts(self):
+        iprot = self._iprot
+        (fname, mtype, rseqid) = iprot.readMessageBegin()
+        if mtype == TMessageType.EXCEPTION:
+            x = TApplicationException()
+            x.read(iprot)
+            iprot.readMessageEnd()
+            raise x
+        result = getTradersAccounts_result()
+        result.read(iprot)
+        iprot.readMessageEnd()
+        if result.success is not None:
+            return result.success
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "getTradersAccounts failed: unknown result")
+
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
         self._handler = handler
         self._processMap = {}
         self._processMap["addTrader"] = Processor.process_addTrader
+        self._processMap["getTradersAccounts"] = Processor.process_getTradersAccounts
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -114,6 +155,29 @@ class Processor(Iface, TProcessor):
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
         oprot.writeMessageBegin("addTrader", msg_type, seqid)
+        result.write(oprot)
+        oprot.writeMessageEnd()
+        oprot.trans.flush()
+
+    def process_getTradersAccounts(self, seqid, iprot, oprot):
+        args = getTradersAccounts_args()
+        args.read(iprot)
+        iprot.readMessageEnd()
+        result = getTradersAccounts_result()
+        try:
+            result.success = self._handler.getTradersAccounts(args.requestGetTraderAccount)
+            msg_type = TMessageType.REPLY
+        except TTransport.TTransportException:
+            raise
+        except TApplicationException as ex:
+            logging.exception('TApplication exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = ex
+        except Exception:
+            logging.exception('Unexpected exception in handler')
+            msg_type = TMessageType.EXCEPTION
+            result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
+        oprot.writeMessageBegin("getTradersAccounts", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -243,6 +307,131 @@ class addTrader_result(object):
 all_structs.append(addTrader_result)
 addTrader_result.thrift_spec = (
     (0, TType.STRUCT, 'success', [AddTraderResponse, None], None, ),  # 0
+)
+
+
+class getTradersAccounts_args(object):
+    """
+    Attributes:
+     - requestGetTraderAccount
+
+    """
+
+
+    def __init__(self, requestGetTraderAccount=None,):
+        self.requestGetTraderAccount = requestGetTraderAccount
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRUCT:
+                    self.requestGetTraderAccount = RequestGetTraderAccount()
+                    self.requestGetTraderAccount.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('getTradersAccounts_args')
+        if self.requestGetTraderAccount is not None:
+            oprot.writeFieldBegin('requestGetTraderAccount', TType.STRUCT, 1)
+            self.requestGetTraderAccount.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(getTradersAccounts_args)
+getTradersAccounts_args.thrift_spec = (
+    None,  # 0
+    (1, TType.STRUCT, 'requestGetTraderAccount', [RequestGetTraderAccount, None], None, ),  # 1
+)
+
+
+class getTradersAccounts_result(object):
+    """
+    Attributes:
+     - success
+
+    """
+
+
+    def __init__(self, success=None,):
+        self.success = success
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 0:
+                if ftype == TType.STRUCT:
+                    self.success = GetTradersAccountsResponse()
+                    self.success.read(iprot)
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('getTradersAccounts_result')
+        if self.success is not None:
+            oprot.writeFieldBegin('success', TType.STRUCT, 0)
+            self.success.write(oprot)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+all_structs.append(getTradersAccounts_result)
+getTradersAccounts_result.thrift_spec = (
+    (0, TType.STRUCT, 'success', [GetTradersAccountsResponse, None], None, ),  # 0
 )
 fix_spec(all_structs)
 del all_structs

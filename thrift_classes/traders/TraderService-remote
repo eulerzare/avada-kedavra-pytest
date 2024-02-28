@@ -25,6 +25,7 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('')
     print('Functions:')
     print('  AddTraderResponse addTrader(AddTrader addTrader)')
+    print('  GetTradersAccountsResponse getTradersAccounts(RequestGetTraderAccount requestGetTraderAccount)')
     print('')
     sys.exit(0)
 
@@ -109,6 +110,12 @@ if cmd == 'addTrader':
         print('addTrader requires 1 args')
         sys.exit(1)
     pp.pprint(client.addTrader(eval(args[0]),))
+
+elif cmd == 'getTradersAccounts':
+    if len(args) != 1:
+        print('getTradersAccounts requires 1 args')
+        sys.exit(1)
+    pp.pprint(client.getTradersAccounts(eval(args[0]),))
 
 else:
     print('Unrecognized method %s' % cmd)
