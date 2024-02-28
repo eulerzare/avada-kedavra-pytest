@@ -70,18 +70,18 @@ class Transaction(object):
                 else:
                     iprot.skip(ftype)
             elif fid == 5:
-                if ftype == TType.DOUBLE:
-                    self.amount = iprot.readDouble()
+                if ftype == TType.STRING:
+                    self.amount = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             elif fid == 6:
-                if ftype == TType.DOUBLE:
-                    self.freezeAmount = iprot.readDouble()
+                if ftype == TType.STRING:
+                    self.freezeAmount = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             elif fid == 7:
-                if ftype == TType.DOUBLE:
-                    self.minAmount = iprot.readDouble()
+                if ftype == TType.STRING:
+                    self.minAmount = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             else:
@@ -111,16 +111,16 @@ class Transaction(object):
             oprot.writeString(self.currencySymbol.encode('utf-8') if sys.version_info[0] == 2 else self.currencySymbol)
             oprot.writeFieldEnd()
         if self.amount is not None:
-            oprot.writeFieldBegin('amount', TType.DOUBLE, 5)
-            oprot.writeDouble(self.amount)
+            oprot.writeFieldBegin('amount', TType.STRING, 5)
+            oprot.writeString(self.amount.encode('utf-8') if sys.version_info[0] == 2 else self.amount)
             oprot.writeFieldEnd()
         if self.freezeAmount is not None:
-            oprot.writeFieldBegin('freezeAmount', TType.DOUBLE, 6)
-            oprot.writeDouble(self.freezeAmount)
+            oprot.writeFieldBegin('freezeAmount', TType.STRING, 6)
+            oprot.writeString(self.freezeAmount.encode('utf-8') if sys.version_info[0] == 2 else self.freezeAmount)
             oprot.writeFieldEnd()
         if self.minAmount is not None:
-            oprot.writeFieldBegin('minAmount', TType.DOUBLE, 7)
-            oprot.writeDouble(self.minAmount)
+            oprot.writeFieldBegin('minAmount', TType.STRING, 7)
+            oprot.writeString(self.minAmount.encode('utf-8') if sys.version_info[0] == 2 else self.minAmount)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -249,9 +249,9 @@ Transaction.thrift_spec = (
     (2, TType.I32, 'genre', None, None, ),  # 2
     (3, TType.I32, 'accountType', None, None, ),  # 3
     (4, TType.STRING, 'currencySymbol', 'UTF8', None, ),  # 4
-    (5, TType.DOUBLE, 'amount', None, None, ),  # 5
-    (6, TType.DOUBLE, 'freezeAmount', None, None, ),  # 6
-    (7, TType.DOUBLE, 'minAmount', None, None, ),  # 7
+    (5, TType.STRING, 'amount', 'UTF8', None, ),  # 5
+    (6, TType.STRING, 'freezeAmount', 'UTF8', None, ),  # 6
+    (7, TType.STRING, 'minAmount', 'UTF8', None, ),  # 7
 )
 all_structs.append(TransactionBulk)
 TransactionBulk.thrift_spec = (

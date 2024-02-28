@@ -153,6 +153,284 @@ class AddTraderResponse(object):
 
     def __ne__(self, other):
         return not (self == other)
+
+
+class RequestGetTraderAccount(object):
+    """
+    Attributes:
+     - traderIds
+
+    """
+
+
+    def __init__(self, traderIds=None,):
+        self.traderIds = traderIds
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.LIST:
+                    self.traderIds = []
+                    (_etype3, _size0) = iprot.readListBegin()
+                    for _i4 in range(_size0):
+                        _elem5 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                        self.traderIds.append(_elem5)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('RequestGetTraderAccount')
+        if self.traderIds is not None:
+            oprot.writeFieldBegin('traderIds', TType.LIST, 1)
+            oprot.writeListBegin(TType.STRING, len(self.traderIds))
+            for iter6 in self.traderIds:
+                oprot.writeString(iter6.encode('utf-8') if sys.version_info[0] == 2 else iter6)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        if self.traderIds is None:
+            raise TProtocolException(message='Required field traderIds is unset!')
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
+class TraderAccount(object):
+    """
+    Attributes:
+     - traderId
+     - currencySymbol
+     - genre
+     - accountType
+     - balance
+     - freezeBalance
+     - minBalance
+
+    """
+
+
+    def __init__(self, traderId=None, currencySymbol=None, genre=None, accountType=None, balance=None, freezeBalance=None, minBalance=None,):
+        self.traderId = traderId
+        self.currencySymbol = currencySymbol
+        self.genre = genre
+        self.accountType = accountType
+        self.balance = balance
+        self.freezeBalance = freezeBalance
+        self.minBalance = minBalance
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.STRING:
+                    self.traderId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.currencySymbol = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.I32:
+                    self.genre = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.I32:
+                    self.accountType = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.STRING:
+                    self.balance = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 6:
+                if ftype == TType.STRING:
+                    self.freezeBalance = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 7:
+                if ftype == TType.STRING:
+                    self.minBalance = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('TraderAccount')
+        if self.traderId is not None:
+            oprot.writeFieldBegin('traderId', TType.STRING, 1)
+            oprot.writeString(self.traderId.encode('utf-8') if sys.version_info[0] == 2 else self.traderId)
+            oprot.writeFieldEnd()
+        if self.currencySymbol is not None:
+            oprot.writeFieldBegin('currencySymbol', TType.STRING, 2)
+            oprot.writeString(self.currencySymbol.encode('utf-8') if sys.version_info[0] == 2 else self.currencySymbol)
+            oprot.writeFieldEnd()
+        if self.genre is not None:
+            oprot.writeFieldBegin('genre', TType.I32, 3)
+            oprot.writeI32(self.genre)
+            oprot.writeFieldEnd()
+        if self.accountType is not None:
+            oprot.writeFieldBegin('accountType', TType.I32, 4)
+            oprot.writeI32(self.accountType)
+            oprot.writeFieldEnd()
+        if self.balance is not None:
+            oprot.writeFieldBegin('balance', TType.STRING, 5)
+            oprot.writeString(self.balance.encode('utf-8') if sys.version_info[0] == 2 else self.balance)
+            oprot.writeFieldEnd()
+        if self.freezeBalance is not None:
+            oprot.writeFieldBegin('freezeBalance', TType.STRING, 6)
+            oprot.writeString(self.freezeBalance.encode('utf-8') if sys.version_info[0] == 2 else self.freezeBalance)
+            oprot.writeFieldEnd()
+        if self.minBalance is not None:
+            oprot.writeFieldBegin('minBalance', TType.STRING, 7)
+            oprot.writeString(self.minBalance.encode('utf-8') if sys.version_info[0] == 2 else self.minBalance)
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
+
+
+class GetTradersAccountsResponse(object):
+    """
+    Attributes:
+     - status
+     - message
+     - traderAccount
+
+    """
+
+
+    def __init__(self, status=None, message=None, traderAccount=None,):
+        self.status = status
+        self.message = message
+        self.traderAccount = traderAccount
+
+    def read(self, iprot):
+        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
+            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
+            return
+        iprot.readStructBegin()
+        while True:
+            (fname, ftype, fid) = iprot.readFieldBegin()
+            if ftype == TType.STOP:
+                break
+            if fid == 1:
+                if ftype == TType.I32:
+                    self.status = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 2:
+                if ftype == TType.STRING:
+                    self.message = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 3:
+                if ftype == TType.LIST:
+                    self.traderAccount = []
+                    (_etype10, _size7) = iprot.readListBegin()
+                    for _i11 in range(_size7):
+                        _elem12 = TraderAccount()
+                        _elem12.read(iprot)
+                        self.traderAccount.append(_elem12)
+                    iprot.readListEnd()
+                else:
+                    iprot.skip(ftype)
+            else:
+                iprot.skip(ftype)
+            iprot.readFieldEnd()
+        iprot.readStructEnd()
+
+    def write(self, oprot):
+        if oprot._fast_encode is not None and self.thrift_spec is not None:
+            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
+            return
+        oprot.writeStructBegin('GetTradersAccountsResponse')
+        if self.status is not None:
+            oprot.writeFieldBegin('status', TType.I32, 1)
+            oprot.writeI32(self.status)
+            oprot.writeFieldEnd()
+        if self.message is not None:
+            oprot.writeFieldBegin('message', TType.STRING, 2)
+            oprot.writeString(self.message.encode('utf-8') if sys.version_info[0] == 2 else self.message)
+            oprot.writeFieldEnd()
+        if self.traderAccount is not None:
+            oprot.writeFieldBegin('traderAccount', TType.LIST, 3)
+            oprot.writeListBegin(TType.STRUCT, len(self.traderAccount))
+            for iter13 in self.traderAccount:
+                iter13.write(oprot)
+            oprot.writeListEnd()
+            oprot.writeFieldEnd()
+        oprot.writeFieldStop()
+        oprot.writeStructEnd()
+
+    def validate(self):
+        return
+
+    def __repr__(self):
+        L = ['%s=%r' % (key, value)
+             for key, value in self.__dict__.items()]
+        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+    def __eq__(self, other):
+        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+    def __ne__(self, other):
+        return not (self == other)
 all_structs.append(AddTrader)
 AddTrader.thrift_spec = (
     None,  # 0
@@ -164,6 +442,29 @@ AddTraderResponse.thrift_spec = (
     (1, TType.I32, 'status', None, None, ),  # 1
     (2, TType.STRING, 'message', 'UTF8', None, ),  # 2
     (3, TType.STRING, 'uniqueId', 'UTF8', None, ),  # 3
+)
+all_structs.append(RequestGetTraderAccount)
+RequestGetTraderAccount.thrift_spec = (
+    None,  # 0
+    (1, TType.LIST, 'traderIds', (TType.STRING, 'UTF8', False), None, ),  # 1
+)
+all_structs.append(TraderAccount)
+TraderAccount.thrift_spec = (
+    None,  # 0
+    (1, TType.STRING, 'traderId', 'UTF8', None, ),  # 1
+    (2, TType.STRING, 'currencySymbol', 'UTF8', None, ),  # 2
+    (3, TType.I32, 'genre', None, None, ),  # 3
+    (4, TType.I32, 'accountType', None, None, ),  # 4
+    (5, TType.STRING, 'balance', 'UTF8', None, ),  # 5
+    (6, TType.STRING, 'freezeBalance', 'UTF8', None, ),  # 6
+    (7, TType.STRING, 'minBalance', 'UTF8', None, ),  # 7
+)
+all_structs.append(GetTradersAccountsResponse)
+GetTradersAccountsResponse.thrift_spec = (
+    None,  # 0
+    (1, TType.I32, 'status', None, None, ),  # 1
+    (2, TType.STRING, 'message', 'UTF8', None, ),  # 2
+    (3, TType.LIST, 'traderAccount', (TType.STRUCT, [TraderAccount, None], False), None, ),  # 3
 )
 fix_spec(all_structs)
 del all_structs
