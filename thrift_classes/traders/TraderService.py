@@ -19,10 +19,10 @@ all_structs = []
 
 
 class Iface(object):
-    def submitTransaction(self, transactionBulk):
+    def addTrader(self, addTrader):
         """
         Parameters:
-         - transactionBulk
+         - addTrader
 
         """
         pass
@@ -35,24 +35,24 @@ class Client(Iface):
             self._oprot = oprot
         self._seqid = 0
 
-    def submitTransaction(self, transactionBulk):
+    def addTrader(self, addTrader):
         """
         Parameters:
-         - transactionBulk
+         - addTrader
 
         """
-        self.send_submitTransaction(transactionBulk)
-        return self.recv_submitTransaction()
+        self.send_addTrader(addTrader)
+        return self.recv_addTrader()
 
-    def send_submitTransaction(self, transactionBulk):
-        self._oprot.writeMessageBegin('submitTransaction', TMessageType.CALL, self._seqid)
-        args = submitTransaction_args()
-        args.transactionBulk = transactionBulk
+    def send_addTrader(self, addTrader):
+        self._oprot.writeMessageBegin('addTrader', TMessageType.CALL, self._seqid)
+        args = addTrader_args()
+        args.addTrader = addTrader
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
 
-    def recv_submitTransaction(self):
+    def recv_addTrader(self):
         iprot = self._iprot
         (fname, mtype, rseqid) = iprot.readMessageBegin()
         if mtype == TMessageType.EXCEPTION:
@@ -60,19 +60,19 @@ class Client(Iface):
             x.read(iprot)
             iprot.readMessageEnd()
             raise x
-        result = submitTransaction_result()
+        result = addTrader_result()
         result.read(iprot)
         iprot.readMessageEnd()
         if result.success is not None:
             return result.success
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "submitTransaction failed: unknown result")
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "addTrader failed: unknown result")
 
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
         self._handler = handler
         self._processMap = {}
-        self._processMap["submitTransaction"] = Processor.process_submitTransaction
+        self._processMap["addTrader"] = Processor.process_addTrader
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -95,13 +95,13 @@ class Processor(Iface, TProcessor):
             self._processMap[name](self, seqid, iprot, oprot)
         return True
 
-    def process_submitTransaction(self, seqid, iprot, oprot):
-        args = submitTransaction_args()
+    def process_addTrader(self, seqid, iprot, oprot):
+        args = addTrader_args()
         args.read(iprot)
         iprot.readMessageEnd()
-        result = submitTransaction_result()
+        result = addTrader_result()
         try:
-            result.success = self._handler.submitTransaction(args.transactionBulk)
+            result.success = self._handler.addTrader(args.addTrader)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -113,7 +113,7 @@ class Processor(Iface, TProcessor):
             logging.exception('Unexpected exception in handler')
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("submitTransaction", msg_type, seqid)
+        oprot.writeMessageBegin("addTrader", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -121,16 +121,16 @@ class Processor(Iface, TProcessor):
 # HELPER FUNCTIONS AND STRUCTURES
 
 
-class submitTransaction_args(object):
+class addTrader_args(object):
     """
     Attributes:
-     - transactionBulk
+     - addTrader
 
     """
 
 
-    def __init__(self, transactionBulk=None,):
-        self.transactionBulk = transactionBulk
+    def __init__(self, addTrader=None,):
+        self.addTrader = addTrader
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -143,8 +143,8 @@ class submitTransaction_args(object):
                 break
             if fid == 1:
                 if ftype == TType.STRUCT:
-                    self.transactionBulk = TransactionBulk()
-                    self.transactionBulk.read(iprot)
+                    self.addTrader = AddTrader()
+                    self.addTrader.read(iprot)
                 else:
                     iprot.skip(ftype)
             else:
@@ -156,10 +156,10 @@ class submitTransaction_args(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('submitTransaction_args')
-        if self.transactionBulk is not None:
-            oprot.writeFieldBegin('transactionBulk', TType.STRUCT, 1)
-            self.transactionBulk.write(oprot)
+        oprot.writeStructBegin('addTrader_args')
+        if self.addTrader is not None:
+            oprot.writeFieldBegin('addTrader', TType.STRUCT, 1)
+            self.addTrader.write(oprot)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -177,14 +177,14 @@ class submitTransaction_args(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(submitTransaction_args)
-submitTransaction_args.thrift_spec = (
+all_structs.append(addTrader_args)
+addTrader_args.thrift_spec = (
     None,  # 0
-    (1, TType.STRUCT, 'transactionBulk', [TransactionBulk, None], None, ),  # 1
+    (1, TType.STRUCT, 'addTrader', [AddTrader, None], None, ),  # 1
 )
 
 
-class submitTransaction_result(object):
+class addTrader_result(object):
     """
     Attributes:
      - success
@@ -206,7 +206,7 @@ class submitTransaction_result(object):
                 break
             if fid == 0:
                 if ftype == TType.STRUCT:
-                    self.success = thrift_classes.base.ttypes.StatusResponse()
+                    self.success = AddTraderResponse()
                     self.success.read(iprot)
                 else:
                     iprot.skip(ftype)
@@ -219,7 +219,7 @@ class submitTransaction_result(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('submitTransaction_result')
+        oprot.writeStructBegin('addTrader_result')
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.STRUCT, 0)
             self.success.write(oprot)
@@ -240,9 +240,9 @@ class submitTransaction_result(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(submitTransaction_result)
-submitTransaction_result.thrift_spec = (
-    (0, TType.STRUCT, 'success', [thrift_classes.base.ttypes.StatusResponse, None], None, ),  # 0
+all_structs.append(addTrader_result)
+addTrader_result.thrift_spec = (
+    (0, TType.STRUCT, 'success', [AddTraderResponse, None], None, ),  # 0
 )
 fix_spec(all_structs)
 del all_structs

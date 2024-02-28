@@ -16,15 +16,15 @@ else:
 from thrift.transport import TTransport, TSocket, TSSLSocket, THttpClient
 from thrift.protocol.TBinaryProtocol import TBinaryProtocol
 
-from transactions import TransactionService
-from transactions.ttypes import *
+from currencies import CurrencyService
+from currencies.ttypes import *
 
 if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('')
     print('Usage: ' + sys.argv[0] + ' [-h host[:port]] [-u url] [-f[ramed]] [-s[sl]] [-novalidate] [-ca_certs certs] [-keyfile keyfile] [-certfile certfile] function [arg1 [arg2...]]')
     print('')
     print('Functions:')
-    print('  StatusResponse submitTransaction(TransactionBulk transactionBulk)')
+    print('  AddCurrencyResponse addCurrency(AddCurrency addCurrency)')
     print('')
     sys.exit(0)
 
@@ -101,14 +101,14 @@ else:
     else:
         transport = TTransport.TBufferedTransport(socket)
 protocol = TBinaryProtocol(transport)
-client = TransactionService.Client(protocol)
+client = CurrencyService.Client(protocol)
 transport.open()
 
-if cmd == 'submitTransaction':
+if cmd == 'addCurrency':
     if len(args) != 1:
-        print('submitTransaction requires 1 args')
+        print('addCurrency requires 1 args')
         sys.exit(1)
-    pp.pprint(client.submitTransaction(eval(args[0]),))
+    pp.pprint(client.addCurrency(eval(args[0]),))
 
 else:
     print('Unrecognized method %s' % cmd)
