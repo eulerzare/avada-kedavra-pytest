@@ -96,3 +96,6 @@ class MultiprocessingClientPool:
     def join(self):
         self.pool.close()
         self.pool.join()
+
+    def __del__(self):
+        self.pool.close()

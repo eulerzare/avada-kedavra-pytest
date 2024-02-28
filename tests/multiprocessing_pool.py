@@ -4,7 +4,7 @@ import uuid
 from multiprocessing import Pool
 
 from decouple import config
-from thrift.protocol import TBinaryProtocol
+from thrift.protocol import TBinaryProtocol, TMultiplexedProtocol
 from thrift.transport import TSocket, TTransport
 
 from clients.base import BaseGrpcClient, BaseWebserverClient, BaseThriftClient
@@ -22,7 +22,7 @@ transport = TSocket.TSocket(host, port)
 transport = TTransport.TBufferedTransport(transport)
 protocol = TBinaryProtocol.TBinaryProtocol(transport)
 
-client = Client(protocol)
+client = Client(TMultiplexedProtocol.TMultiplexedProtocol(protocol, "TransactionService"))
 transport.open()
 
 transaction1 = ThriftTransaction(
@@ -69,6 +69,25 @@ def to_do(unique_id):
         transactions=[transaction1, transaction2, transaction3]
     )
     return client.submitTransaction(request)
+
+
+def to_do_memory(none):
+    request = ThriftTransactionBulk(
+        uniqueId="0",
+        timestamp=1234,
+        objectId=1,
+        eventType="new",
+        transactions=[transaction1, transaction2, transaction3]
+    )
+    counter = 0
+    start_time_of_batch = time.time()
+    while True:
+        counter += 1
+        request.uniqueId = str(uuid.uuid4())
+        client.submitTransaction(request)
+        if counter % 10_000 == 0:
+            print(time.time() - start_time_of_batch)
+            start_time_of_batch = time.time()
 
 
 class BaseMultiprocessTest(unittest.TestCase):
@@ -199,7 +218,7 @@ class BaseMultiprocessTest(unittest.TestCase):
             currency="usdt",
             entity="internal",
             subsidiaryAccount="main",
-            entityType=1,
+            entityType=1,  # margin / main
             minAmount=1,
             description="third transaction",
         )
@@ -220,8 +239,18 @@ class BaseMultiprocessTest(unittest.TestCase):
         list_of_ids = [str(uuid.uuid4()) for _ in range(100000)]
         list_of_ids = list_of_ids + [list_of_ids[0], list_of_ids[1]]
 
-        pool: Pool = Pool(processes=4)
+        pool: Pool = Pool(processes=1)
         start_time = time.time()
         responses = pool.map(to_do, list_of_ids)
         print(time.time() - start_time)
         print([(i, r.message) for i, r in enumerate(responses) if r.message != "Unique Id checked"])
+        pool.close()
+
+    def test_memory_leak(self):
+        pool: Pool = Pool(processes=12)
+        responses = pool.map(to_do_memory, [None] * 12)
+        pool.close()
+
+    def tearDown(self):
+        del self.multiprocessing_client
+        transport.close()
