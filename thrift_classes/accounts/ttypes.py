@@ -24,15 +24,17 @@ class AddAccount(object):
      - currencySymbol
      - genre
      - accountType
+     - pairId
 
     """
 
 
-    def __init__(self, id=None, currencySymbol=None, genre=None, accountType=None,):
+    def __init__(self, id=None, currencySymbol=None, genre=None, accountType=None, pairId=None,):
         self.id = id
         self.currencySymbol = currencySymbol
         self.genre = genre
         self.accountType = accountType
+        self.pairId = pairId
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -63,6 +65,11 @@ class AddAccount(object):
                     self.accountType = iprot.readI32()
                 else:
                     iprot.skip(ftype)
+            elif fid == 5:
+                if ftype == TType.I32:
+                    self.pairId = iprot.readI32()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -89,6 +96,10 @@ class AddAccount(object):
             oprot.writeFieldBegin('accountType', TType.I32, 4)
             oprot.writeI32(self.accountType)
             oprot.writeFieldEnd()
+        if self.pairId is not None:
+            oprot.writeFieldBegin('pairId', TType.I32, 5)
+            oprot.writeI32(self.pairId)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
@@ -101,6 +112,8 @@ class AddAccount(object):
             raise TProtocolException(message='Required field genre is unset!')
         if self.accountType is None:
             raise TProtocolException(message='Required field accountType is unset!')
+        if self.pairId is None:
+            raise TProtocolException(message='Required field pairId is unset!')
         return
 
     def __repr__(self):
@@ -120,6 +133,7 @@ AddAccount.thrift_spec = (
     (2, TType.STRING, 'currencySymbol', 'UTF8', None, ),  # 2
     (3, TType.I32, 'genre', None, None, ),  # 3
     (4, TType.I32, 'accountType', None, None, ),  # 4
+    (5, TType.I32, 'pairId', None, None, ),  # 5
 )
 fix_spec(all_structs)
 del all_structs

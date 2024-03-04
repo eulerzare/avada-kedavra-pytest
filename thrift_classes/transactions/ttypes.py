@@ -23,6 +23,7 @@ class Transaction(object):
      - traderId
      - genre
      - accountType
+     - pairId
      - currencySymbol
      - amount
      - freezeAmount
@@ -31,10 +32,11 @@ class Transaction(object):
     """
 
 
-    def __init__(self, traderId=None, genre=None, accountType=None, currencySymbol=None, amount=None, freezeAmount=None, minAmount=None,):
+    def __init__(self, traderId=None, genre=None, accountType=None, pairId=None, currencySymbol=None, amount=None, freezeAmount=None, minAmount=None,):
         self.traderId = traderId
         self.genre = genre
         self.accountType = accountType
+        self.pairId = pairId
         self.currencySymbol = currencySymbol
         self.amount = amount
         self.freezeAmount = freezeAmount
@@ -65,21 +67,26 @@ class Transaction(object):
                 else:
                     iprot.skip(ftype)
             elif fid == 4:
-                if ftype == TType.STRING:
-                    self.currencySymbol = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                if ftype == TType.I32:
+                    self.pairId = iprot.readI32()
                 else:
                     iprot.skip(ftype)
             elif fid == 5:
                 if ftype == TType.STRING:
-                    self.amount = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                    self.currencySymbol = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             elif fid == 6:
                 if ftype == TType.STRING:
-                    self.freezeAmount = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                    self.amount = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             elif fid == 7:
+                if ftype == TType.STRING:
+                    self.freezeAmount = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 8:
                 if ftype == TType.STRING:
                     self.minAmount = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
@@ -106,20 +113,24 @@ class Transaction(object):
             oprot.writeFieldBegin('accountType', TType.I32, 3)
             oprot.writeI32(self.accountType)
             oprot.writeFieldEnd()
+        if self.pairId is not None:
+            oprot.writeFieldBegin('pairId', TType.I32, 4)
+            oprot.writeI32(self.pairId)
+            oprot.writeFieldEnd()
         if self.currencySymbol is not None:
-            oprot.writeFieldBegin('currencySymbol', TType.STRING, 4)
+            oprot.writeFieldBegin('currencySymbol', TType.STRING, 5)
             oprot.writeString(self.currencySymbol.encode('utf-8') if sys.version_info[0] == 2 else self.currencySymbol)
             oprot.writeFieldEnd()
         if self.amount is not None:
-            oprot.writeFieldBegin('amount', TType.STRING, 5)
+            oprot.writeFieldBegin('amount', TType.STRING, 6)
             oprot.writeString(self.amount.encode('utf-8') if sys.version_info[0] == 2 else self.amount)
             oprot.writeFieldEnd()
         if self.freezeAmount is not None:
-            oprot.writeFieldBegin('freezeAmount', TType.STRING, 6)
+            oprot.writeFieldBegin('freezeAmount', TType.STRING, 7)
             oprot.writeString(self.freezeAmount.encode('utf-8') if sys.version_info[0] == 2 else self.freezeAmount)
             oprot.writeFieldEnd()
         if self.minAmount is not None:
-            oprot.writeFieldBegin('minAmount', TType.STRING, 7)
+            oprot.writeFieldBegin('minAmount', TType.STRING, 8)
             oprot.writeString(self.minAmount.encode('utf-8') if sys.version_info[0] == 2 else self.minAmount)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
@@ -132,6 +143,8 @@ class Transaction(object):
             raise TProtocolException(message='Required field genre is unset!')
         if self.accountType is None:
             raise TProtocolException(message='Required field accountType is unset!')
+        if self.pairId is None:
+            raise TProtocolException(message='Required field pairId is unset!')
         if self.currencySymbol is None:
             raise TProtocolException(message='Required field currencySymbol is unset!')
         if self.amount is None:
@@ -248,10 +261,11 @@ Transaction.thrift_spec = (
     (1, TType.STRING, 'traderId', 'UTF8', None, ),  # 1
     (2, TType.I32, 'genre', None, None, ),  # 2
     (3, TType.I32, 'accountType', None, None, ),  # 3
-    (4, TType.STRING, 'currencySymbol', 'UTF8', None, ),  # 4
-    (5, TType.STRING, 'amount', 'UTF8', None, ),  # 5
-    (6, TType.STRING, 'freezeAmount', 'UTF8', None, ),  # 6
-    (7, TType.STRING, 'minAmount', 'UTF8', None, ),  # 7
+    (4, TType.I32, 'pairId', None, None, ),  # 4
+    (5, TType.STRING, 'currencySymbol', 'UTF8', None, ),  # 5
+    (6, TType.STRING, 'amount', 'UTF8', None, ),  # 6
+    (7, TType.STRING, 'freezeAmount', 'UTF8', None, ),  # 7
+    (8, TType.STRING, 'minAmount', 'UTF8', None, ),  # 8
 )
 all_structs.append(TransactionBulk)
 TransactionBulk.thrift_spec = (

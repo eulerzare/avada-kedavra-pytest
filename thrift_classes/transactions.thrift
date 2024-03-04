@@ -8,10 +8,11 @@ struct Transaction {
   1: required string traderId,
   2: required base.Genre genre,
   3: required base.AccountType accountType,
-  4: required string currencySymbol,
-  5: required string amount,
-  6: required string freezeAmount,
-  7: required string minAmount,
+  4: required i32 pairId,
+  5: required string currencySymbol,
+  6: required string amount,
+  7: required string freezeAmount,
+  8: required string minAmount,
 }
 
 struct TransactionBulk {
