@@ -13,9 +13,9 @@ from thrift_classes.base.ttypes import Genre, AccountType
 from thrift_classes.currencies.ttypes import AddCurrency
 from thrift_classes.accounts.AccountService import Client as AccountClient
 from thrift_classes.currencies.CurrencyService import Client as CurrencyClient
-from thrift_classes.traders.ttypes import AddTrader, RequestGetTraderAccount
+from thrift_classes.entities.ttypes import AddEntity, RequestGetEntityAccount
 from thrift_classes.transactions.TransactionService import Client as TransactionClient
-from thrift_classes.traders.TraderService import Client as TraderClient
+from thrift_classes.entities.EntityService import Client as EntityClient
 from thrift_classes.transactions.ttypes import Transaction
 from thrift_classes.transactions.ttypes import TransactionBulk
 
@@ -28,7 +28,7 @@ protocol = TBinaryProtocol.TBinaryProtocol(transport)
 transaction_client = TransactionClient(TMultiplexedProtocol.TMultiplexedProtocol(protocol, "TransactionService"))
 currency_client = CurrencyClient(TMultiplexedProtocol.TMultiplexedProtocol(protocol, "CurrencyService"))
 account_client = AccountClient(TMultiplexedProtocol.TMultiplexedProtocol(protocol, "AccountService"))
-trader_client = TraderClient(TMultiplexedProtocol.TMultiplexedProtocol(protocol, "TraderService"))
+entity_client = EntityClient(TMultiplexedProtocol.TMultiplexedProtocol(protocol, "EntityService"))
 transport.open()
 
 
@@ -44,18 +44,18 @@ def add_account(request: AddAccount):
     return account_client.addAccount(request)
 
 
-def add_trader(request: AddTrader):
-    return trader_client.addTrader(request)
+def add_entity(request: AddEntity):
+    return entity_client.addEntity(request)
 
 
-def get_traders_accounts(request: RequestGetTraderAccount):
-    return trader_client.getTradersAccounts(request)
+def get_entities_accounts(request: RequestGetEntityAccount):
+    return entity_client.getEntitiesAccounts(request)
 
 
 class AccountingTest(unittest.TestCase):
     def test_unique_transaction_submitted(self):
         transaction1 = Transaction(
-            traderId="0",
+            entityId="0",
             genre=Genre.MAIN,
             accountType=AccountType.EXTERNAL,
             currencySymbol="usdt",
@@ -64,7 +64,7 @@ class AccountingTest(unittest.TestCase):
             minAmount=-100,
         )
         transaction2 = Transaction(
-            traderId="0",
+            entityId="0",
             genre=Genre.MAIN,
             accountType=AccountType.EXTERNAL,
             currencySymbol="usdt",
@@ -112,16 +112,16 @@ class AccountingTest(unittest.TestCase):
         # #     print(rr)
         # pool.close()
 
-    def test_add_trader(self):
-        r = AddTrader(
+    def test_add_entity(self):
+        r = AddEntity(
             uniqueId="0"
         )
-        print(add_trader(r))
+        print(add_entity(r))
 
-        r = AddTrader(
+        r = AddEntity(
             uniqueId="1"
         )
-        print(add_trader(r))
+        print(add_entity(r))
 
         # pool: Pool = Pool(processes=12)
         # start_time = time.time()
@@ -133,7 +133,7 @@ class AccountingTest(unittest.TestCase):
 
     def test_transaction_submitted(self):
         transaction1 = Transaction(
-            traderId="0",
+            entityId="0",
             genre=Genre.MAIN,
             accountType=AccountType.EXTERNAL,
             pairId=1,
@@ -143,7 +143,7 @@ class AccountingTest(unittest.TestCase):
             minAmount=str(-100),
         )
         transaction2 = Transaction(
-            traderId="1",
+            entityId="1",
             genre=Genre.MAIN,
             accountType=AccountType.EXTERNAL,
             pairId=1,
@@ -153,7 +153,7 @@ class AccountingTest(unittest.TestCase):
             minAmount=str(-100),
         )
         transaction3 = Transaction(
-            traderId="1",
+            entityId="1",
             genre=Genre.MAIN,
             accountType=AccountType.EXTERNAL,
             pairId=1,
@@ -179,12 +179,12 @@ class AccountingTest(unittest.TestCase):
         # #     print(rr)
         # pool.close()
 
-    def test_get_traders_accounts(self):
-        r = RequestGetTraderAccount(
-            traderIds=["0", "1", "2"]
+    def test_get_entities_accounts(self):
+        r = RequestGetEntityAccount(
+            uniqueIds=["0", "1", "2"]
         )
-        resp = get_traders_accounts(r)
-        for a in resp.traderAccount:
+        resp = get_entities_accounts(r)
+        for a in resp.entityAccount:
             print(a)
 
         # pool: Pool = Pool(processes=12)
@@ -197,35 +197,35 @@ class AccountingTest(unittest.TestCase):
 
     def test_benchmark1(self):
         number_of_transactions = 100_000
-        number_of_traders = number_of_transactions
+        number_of_entities = number_of_transactions
         number_of_batches = 20_000
         number_of_workers = 8
         usdt_value = 10000.
         btc_value = .1
         eth_value = 1.
 
-        number_of_traders_in_batch = number_of_traders // number_of_batches
+        number_of_entities_in_batch = number_of_entities // number_of_batches
 
         add_currency(AddCurrency(symbol="usdt", name="tether"))
         add_currency(AddCurrency(symbol="btc", name="bitcoin"))
         add_currency(AddCurrency(symbol="eth", name="ethereum"))
 
-        whole_traders = [AddTrader(uniqueId=str(i)) for i in range(number_of_traders)]
+        whole_entities = [AddEntity(uniqueId=str(i)) for i in range(number_of_entities)]
         pool: Pool = Pool(processes=number_of_workers)
         start_time = time.time()
-        pool.map(add_trader, whole_traders)
+        pool.map(add_entity, whole_entities)
         print(time.time() - start_time)
         pool.close()
 
         whole_transactions = []
-        for i_level in range(number_of_traders_in_batch):
+        for i_level in range(number_of_entities_in_batch):
             sign1 = -1. if i_level % 2 == 0 else 1.
             sign2 = 1. if i_level % 2 == 0 else -1.
             for i_batch in range(number_of_batches):
                 trx = list()
                 trx.append(
                     Transaction(
-                        traderId=str(0 + i_batch * number_of_batches),
+                        entityId=str(0 + i_batch * number_of_batches),
                         genre=Genre.MAIN,
                         accountType=AccountType.EXTERNAL,
                         pairId=1,
@@ -237,7 +237,7 @@ class AccountingTest(unittest.TestCase):
                 )
                 trx.append(
                     Transaction(
-                        traderId=str(0 + i_batch * number_of_batches),
+                        entityId=str(0 + i_batch * number_of_batches),
                         genre=Genre.MAIN,
                         accountType=AccountType.EXTERNAL,
                         pairId=1,
@@ -249,7 +249,7 @@ class AccountingTest(unittest.TestCase):
                 )
                 trx.append(
                     Transaction(
-                        traderId=str(0 + i_batch * number_of_batches),
+                        entityId=str(0 + i_batch * number_of_batches),
                         genre=Genre.MAIN,
                         accountType=AccountType.EXTERNAL,
                         pairId=1,
@@ -259,40 +259,40 @@ class AccountingTest(unittest.TestCase):
                         minAmount=str(-eth_value),
                     )
                 )
-                for i_trader_in_batch in range(1, number_of_traders_in_batch):
+                for i_entity_in_batch in range(1, number_of_entities_in_batch):
                     trx.append(
                         Transaction(
-                            traderId=str(i_trader_in_batch + i_batch * number_of_batches),
+                            entityId=str(i_entity_in_batch + i_batch * number_of_batches),
                             genre=Genre.MAIN,
                             accountType=AccountType.EXTERNAL,
                             pairId=1,
                             currencySymbol="usdt",
-                            amount=str(usdt_value / (number_of_traders_in_batch - 1) * sign2).zfill(7),
-                            freezeAmount=str(usdt_value / (number_of_traders_in_batch - 1) * sign2).zfill(7),
+                            amount=str(usdt_value / (number_of_entities_in_batch - 1) * sign2).zfill(7),
+                            freezeAmount=str(usdt_value / (number_of_entities_in_batch - 1) * sign2).zfill(7),
                             minAmount=str(-usdt_value),
                         )
                     )
                     trx.append(
                         Transaction(
-                            traderId=str(i_trader_in_batch + i_batch * number_of_batches),
+                            entityId=str(i_entity_in_batch + i_batch * number_of_batches),
                             genre=Genre.MAIN,
                             accountType=AccountType.EXTERNAL,
                             pairId=1,
                             currencySymbol="btc",
-                            amount=str(btc_value / (number_of_traders_in_batch - 1) * sign2).zfill(7),
-                            freezeAmount=str(btc_value / (number_of_traders_in_batch - 1) * sign2).zfill(7),
+                            amount=str(btc_value / (number_of_entities_in_batch - 1) * sign2).zfill(7),
+                            freezeAmount=str(btc_value / (number_of_entities_in_batch - 1) * sign2).zfill(7),
                             minAmount=str(-btc_value),
                         )
                     )
                     trx.append(
                         Transaction(
-                            traderId=str(i_trader_in_batch + i_batch * number_of_batches),
+                            entityId=str(i_entity_in_batch + i_batch * number_of_batches),
                             genre=Genre.MAIN,
                             accountType=AccountType.EXTERNAL,
                             pairId=1,
                             currencySymbol="eth",
-                            amount=str(eth_value / (number_of_traders_in_batch - 1) * sign2).zfill(7),
-                            freezeAmount=str(eth_value / (number_of_traders_in_batch - 1) * sign2).zfill(7),
+                            amount=str(eth_value / (number_of_entities_in_batch - 1) * sign2).zfill(7),
+                            freezeAmount=str(eth_value / (number_of_entities_in_batch - 1) * sign2).zfill(7),
                             minAmount=str(-eth_value),
                         )
                     )
@@ -313,12 +313,12 @@ class AccountingTest(unittest.TestCase):
         #     print(rr)
         pool.close()
 
-        resp = get_traders_accounts(
-            RequestGetTraderAccount(
-                traderIds=["0", "1", "2", "3", "4", "5", "6"]
+        resp = get_entities_accounts(
+            RequestGetEntityAccount(
+                uniqueIds=["0", "1", "2", "3", "4", "5", "6"]
             )
         )
-        for a in resp.traderAccount:
+        for a in resp.entityAccount:
             print(a)
 
     def tearDown(self):

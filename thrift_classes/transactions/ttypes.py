@@ -20,7 +20,7 @@ all_structs = []
 class Transaction(object):
     """
     Attributes:
-     - traderId
+     - entityId
      - genre
      - accountType
      - pairId
@@ -28,12 +28,14 @@ class Transaction(object):
      - amount
      - freezeAmount
      - minAmount
+     - subsidiaryAccount
+     - description
 
     """
 
 
-    def __init__(self, traderId=None, genre=None, accountType=None, pairId=None, currencySymbol=None, amount=None, freezeAmount=None, minAmount=None,):
-        self.traderId = traderId
+    def __init__(self, entityId=None, genre=None, accountType=None, pairId=None, currencySymbol=None, amount=None, freezeAmount=None, minAmount=None, subsidiaryAccount=None, description=None,):
+        self.entityId = entityId
         self.genre = genre
         self.accountType = accountType
         self.pairId = pairId
@@ -41,6 +43,8 @@ class Transaction(object):
         self.amount = amount
         self.freezeAmount = freezeAmount
         self.minAmount = minAmount
+        self.subsidiaryAccount = subsidiaryAccount
+        self.description = description
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -53,7 +57,7 @@ class Transaction(object):
                 break
             if fid == 1:
                 if ftype == TType.STRING:
-                    self.traderId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                    self.entityId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             elif fid == 2:
@@ -91,6 +95,16 @@ class Transaction(object):
                     self.minAmount = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
+            elif fid == 9:
+                if ftype == TType.STRING:
+                    self.subsidiaryAccount = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 10:
+                if ftype == TType.STRING:
+                    self.description = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
             else:
                 iprot.skip(ftype)
             iprot.readFieldEnd()
@@ -101,9 +115,9 @@ class Transaction(object):
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
         oprot.writeStructBegin('Transaction')
-        if self.traderId is not None:
-            oprot.writeFieldBegin('traderId', TType.STRING, 1)
-            oprot.writeString(self.traderId.encode('utf-8') if sys.version_info[0] == 2 else self.traderId)
+        if self.entityId is not None:
+            oprot.writeFieldBegin('entityId', TType.STRING, 1)
+            oprot.writeString(self.entityId.encode('utf-8') if sys.version_info[0] == 2 else self.entityId)
             oprot.writeFieldEnd()
         if self.genre is not None:
             oprot.writeFieldBegin('genre', TType.I32, 2)
@@ -133,12 +147,20 @@ class Transaction(object):
             oprot.writeFieldBegin('minAmount', TType.STRING, 8)
             oprot.writeString(self.minAmount.encode('utf-8') if sys.version_info[0] == 2 else self.minAmount)
             oprot.writeFieldEnd()
+        if self.subsidiaryAccount is not None:
+            oprot.writeFieldBegin('subsidiaryAccount', TType.STRING, 9)
+            oprot.writeString(self.subsidiaryAccount.encode('utf-8') if sys.version_info[0] == 2 else self.subsidiaryAccount)
+            oprot.writeFieldEnd()
+        if self.description is not None:
+            oprot.writeFieldBegin('description', TType.STRING, 10)
+            oprot.writeString(self.description.encode('utf-8') if sys.version_info[0] == 2 else self.description)
+            oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
 
     def validate(self):
-        if self.traderId is None:
-            raise TProtocolException(message='Required field traderId is unset!')
+        if self.entityId is None:
+            raise TProtocolException(message='Required field entityId is unset!')
         if self.genre is None:
             raise TProtocolException(message='Required field genre is unset!')
         if self.accountType is None:
@@ -172,14 +194,18 @@ class TransactionBulk(object):
     Attributes:
      - uniqueId
      - timestamp
+     - objectId
+     - eventType
      - transactions
 
     """
 
 
-    def __init__(self, uniqueId=None, timestamp=None, transactions=None,):
+    def __init__(self, uniqueId=None, timestamp=None, objectId=None, eventType=None, transactions=None,):
         self.uniqueId = uniqueId
         self.timestamp = timestamp
+        self.objectId = objectId
+        self.eventType = eventType
         self.transactions = transactions
 
     def read(self, iprot):
@@ -202,6 +228,16 @@ class TransactionBulk(object):
                 else:
                     iprot.skip(ftype)
             elif fid == 3:
+                if ftype == TType.I64:
+                    self.objectId = iprot.readI64()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 4:
+                if ftype == TType.STRING:
+                    self.eventType = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                else:
+                    iprot.skip(ftype)
+            elif fid == 5:
                 if ftype == TType.LIST:
                     self.transactions = []
                     (_etype3, _size0) = iprot.readListBegin()
@@ -230,8 +266,16 @@ class TransactionBulk(object):
             oprot.writeFieldBegin('timestamp', TType.I64, 2)
             oprot.writeI64(self.timestamp)
             oprot.writeFieldEnd()
+        if self.objectId is not None:
+            oprot.writeFieldBegin('objectId', TType.I64, 3)
+            oprot.writeI64(self.objectId)
+            oprot.writeFieldEnd()
+        if self.eventType is not None:
+            oprot.writeFieldBegin('eventType', TType.STRING, 4)
+            oprot.writeString(self.eventType.encode('utf-8') if sys.version_info[0] == 2 else self.eventType)
+            oprot.writeFieldEnd()
         if self.transactions is not None:
-            oprot.writeFieldBegin('transactions', TType.LIST, 3)
+            oprot.writeFieldBegin('transactions', TType.LIST, 5)
             oprot.writeListBegin(TType.STRUCT, len(self.transactions))
             for iter6 in self.transactions:
                 iter6.write(oprot)
@@ -258,7 +302,7 @@ class TransactionBulk(object):
 all_structs.append(Transaction)
 Transaction.thrift_spec = (
     None,  # 0
-    (1, TType.STRING, 'traderId', 'UTF8', None, ),  # 1
+    (1, TType.STRING, 'entityId', 'UTF8', None, ),  # 1
     (2, TType.I32, 'genre', None, None, ),  # 2
     (3, TType.I32, 'accountType', None, None, ),  # 3
     (4, TType.I32, 'pairId', None, None, ),  # 4
@@ -266,13 +310,17 @@ Transaction.thrift_spec = (
     (6, TType.STRING, 'amount', 'UTF8', None, ),  # 6
     (7, TType.STRING, 'freezeAmount', 'UTF8', None, ),  # 7
     (8, TType.STRING, 'minAmount', 'UTF8', None, ),  # 8
+    (9, TType.STRING, 'subsidiaryAccount', 'UTF8', None, ),  # 9
+    (10, TType.STRING, 'description', 'UTF8', None, ),  # 10
 )
 all_structs.append(TransactionBulk)
 TransactionBulk.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'uniqueId', 'UTF8', None, ),  # 1
     (2, TType.I64, 'timestamp', None, None, ),  # 2
-    (3, TType.LIST, 'transactions', (TType.STRUCT, [Transaction, None], False), None, ),  # 3
+    (3, TType.I64, 'objectId', None, None, ),  # 3
+    (4, TType.STRING, 'eventType', 'UTF8', None, ),  # 4
+    (5, TType.LIST, 'transactions', (TType.STRUCT, [Transaction, None], False), None, ),  # 5
 )
 fix_spec(all_structs)
 del all_structs

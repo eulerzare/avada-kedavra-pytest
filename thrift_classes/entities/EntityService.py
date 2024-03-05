@@ -19,18 +19,18 @@ all_structs = []
 
 
 class Iface(object):
-    def addTrader(self, addTrader):
+    def addEntity(self, addEntity):
         """
         Parameters:
-         - addTrader
+         - addEntity
 
         """
         pass
 
-    def getTradersAccounts(self, requestGetTraderAccount):
+    def getEntitiesAccounts(self, requestGetEntityAccount):
         """
         Parameters:
-         - requestGetTraderAccount
+         - requestGetEntityAccount
 
         """
         pass
@@ -43,24 +43,24 @@ class Client(Iface):
             self._oprot = oprot
         self._seqid = 0
 
-    def addTrader(self, addTrader):
+    def addEntity(self, addEntity):
         """
         Parameters:
-         - addTrader
+         - addEntity
 
         """
-        self.send_addTrader(addTrader)
-        return self.recv_addTrader()
+        self.send_addEntity(addEntity)
+        return self.recv_addEntity()
 
-    def send_addTrader(self, addTrader):
-        self._oprot.writeMessageBegin('addTrader', TMessageType.CALL, self._seqid)
-        args = addTrader_args()
-        args.addTrader = addTrader
+    def send_addEntity(self, addEntity):
+        self._oprot.writeMessageBegin('addEntity', TMessageType.CALL, self._seqid)
+        args = addEntity_args()
+        args.addEntity = addEntity
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
 
-    def recv_addTrader(self):
+    def recv_addEntity(self):
         iprot = self._iprot
         (fname, mtype, rseqid) = iprot.readMessageBegin()
         if mtype == TMessageType.EXCEPTION:
@@ -68,31 +68,31 @@ class Client(Iface):
             x.read(iprot)
             iprot.readMessageEnd()
             raise x
-        result = addTrader_result()
+        result = addEntity_result()
         result.read(iprot)
         iprot.readMessageEnd()
         if result.success is not None:
             return result.success
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "addTrader failed: unknown result")
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "addEntity failed: unknown result")
 
-    def getTradersAccounts(self, requestGetTraderAccount):
+    def getEntitiesAccounts(self, requestGetEntityAccount):
         """
         Parameters:
-         - requestGetTraderAccount
+         - requestGetEntityAccount
 
         """
-        self.send_getTradersAccounts(requestGetTraderAccount)
-        return self.recv_getTradersAccounts()
+        self.send_getEntitiesAccounts(requestGetEntityAccount)
+        return self.recv_getEntitiesAccounts()
 
-    def send_getTradersAccounts(self, requestGetTraderAccount):
-        self._oprot.writeMessageBegin('getTradersAccounts', TMessageType.CALL, self._seqid)
-        args = getTradersAccounts_args()
-        args.requestGetTraderAccount = requestGetTraderAccount
+    def send_getEntitiesAccounts(self, requestGetEntityAccount):
+        self._oprot.writeMessageBegin('getEntitiesAccounts', TMessageType.CALL, self._seqid)
+        args = getEntitiesAccounts_args()
+        args.requestGetEntityAccount = requestGetEntityAccount
         args.write(self._oprot)
         self._oprot.writeMessageEnd()
         self._oprot.trans.flush()
 
-    def recv_getTradersAccounts(self):
+    def recv_getEntitiesAccounts(self):
         iprot = self._iprot
         (fname, mtype, rseqid) = iprot.readMessageBegin()
         if mtype == TMessageType.EXCEPTION:
@@ -100,20 +100,20 @@ class Client(Iface):
             x.read(iprot)
             iprot.readMessageEnd()
             raise x
-        result = getTradersAccounts_result()
+        result = getEntitiesAccounts_result()
         result.read(iprot)
         iprot.readMessageEnd()
         if result.success is not None:
             return result.success
-        raise TApplicationException(TApplicationException.MISSING_RESULT, "getTradersAccounts failed: unknown result")
+        raise TApplicationException(TApplicationException.MISSING_RESULT, "getEntitiesAccounts failed: unknown result")
 
 
 class Processor(Iface, TProcessor):
     def __init__(self, handler):
         self._handler = handler
         self._processMap = {}
-        self._processMap["addTrader"] = Processor.process_addTrader
-        self._processMap["getTradersAccounts"] = Processor.process_getTradersAccounts
+        self._processMap["addEntity"] = Processor.process_addEntity
+        self._processMap["getEntitiesAccounts"] = Processor.process_getEntitiesAccounts
         self._on_message_begin = None
 
     def on_message_begin(self, func):
@@ -136,13 +136,13 @@ class Processor(Iface, TProcessor):
             self._processMap[name](self, seqid, iprot, oprot)
         return True
 
-    def process_addTrader(self, seqid, iprot, oprot):
-        args = addTrader_args()
+    def process_addEntity(self, seqid, iprot, oprot):
+        args = addEntity_args()
         args.read(iprot)
         iprot.readMessageEnd()
-        result = addTrader_result()
+        result = addEntity_result()
         try:
-            result.success = self._handler.addTrader(args.addTrader)
+            result.success = self._handler.addEntity(args.addEntity)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -154,18 +154,18 @@ class Processor(Iface, TProcessor):
             logging.exception('Unexpected exception in handler')
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("addTrader", msg_type, seqid)
+        oprot.writeMessageBegin("addEntity", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
 
-    def process_getTradersAccounts(self, seqid, iprot, oprot):
-        args = getTradersAccounts_args()
+    def process_getEntitiesAccounts(self, seqid, iprot, oprot):
+        args = getEntitiesAccounts_args()
         args.read(iprot)
         iprot.readMessageEnd()
-        result = getTradersAccounts_result()
+        result = getEntitiesAccounts_result()
         try:
-            result.success = self._handler.getTradersAccounts(args.requestGetTraderAccount)
+            result.success = self._handler.getEntitiesAccounts(args.requestGetEntityAccount)
             msg_type = TMessageType.REPLY
         except TTransport.TTransportException:
             raise
@@ -177,7 +177,7 @@ class Processor(Iface, TProcessor):
             logging.exception('Unexpected exception in handler')
             msg_type = TMessageType.EXCEPTION
             result = TApplicationException(TApplicationException.INTERNAL_ERROR, 'Internal error')
-        oprot.writeMessageBegin("getTradersAccounts", msg_type, seqid)
+        oprot.writeMessageBegin("getEntitiesAccounts", msg_type, seqid)
         result.write(oprot)
         oprot.writeMessageEnd()
         oprot.trans.flush()
@@ -185,16 +185,16 @@ class Processor(Iface, TProcessor):
 # HELPER FUNCTIONS AND STRUCTURES
 
 
-class addTrader_args(object):
+class addEntity_args(object):
     """
     Attributes:
-     - addTrader
+     - addEntity
 
     """
 
 
-    def __init__(self, addTrader=None,):
-        self.addTrader = addTrader
+    def __init__(self, addEntity=None,):
+        self.addEntity = addEntity
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -207,8 +207,8 @@ class addTrader_args(object):
                 break
             if fid == 1:
                 if ftype == TType.STRUCT:
-                    self.addTrader = AddTrader()
-                    self.addTrader.read(iprot)
+                    self.addEntity = AddEntity()
+                    self.addEntity.read(iprot)
                 else:
                     iprot.skip(ftype)
             else:
@@ -220,10 +220,10 @@ class addTrader_args(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('addTrader_args')
-        if self.addTrader is not None:
-            oprot.writeFieldBegin('addTrader', TType.STRUCT, 1)
-            self.addTrader.write(oprot)
+        oprot.writeStructBegin('addEntity_args')
+        if self.addEntity is not None:
+            oprot.writeFieldBegin('addEntity', TType.STRUCT, 1)
+            self.addEntity.write(oprot)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -241,14 +241,14 @@ class addTrader_args(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(addTrader_args)
-addTrader_args.thrift_spec = (
+all_structs.append(addEntity_args)
+addEntity_args.thrift_spec = (
     None,  # 0
-    (1, TType.STRUCT, 'addTrader', [AddTrader, None], None, ),  # 1
+    (1, TType.STRUCT, 'addEntity', [AddEntity, None], None, ),  # 1
 )
 
 
-class addTrader_result(object):
+class addEntity_result(object):
     """
     Attributes:
      - success
@@ -270,7 +270,7 @@ class addTrader_result(object):
                 break
             if fid == 0:
                 if ftype == TType.STRUCT:
-                    self.success = AddTraderResponse()
+                    self.success = AddEntityResponse()
                     self.success.read(iprot)
                 else:
                     iprot.skip(ftype)
@@ -283,7 +283,7 @@ class addTrader_result(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('addTrader_result')
+        oprot.writeStructBegin('addEntity_result')
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.STRUCT, 0)
             self.success.write(oprot)
@@ -304,22 +304,22 @@ class addTrader_result(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(addTrader_result)
-addTrader_result.thrift_spec = (
-    (0, TType.STRUCT, 'success', [AddTraderResponse, None], None, ),  # 0
+all_structs.append(addEntity_result)
+addEntity_result.thrift_spec = (
+    (0, TType.STRUCT, 'success', [AddEntityResponse, None], None, ),  # 0
 )
 
 
-class getTradersAccounts_args(object):
+class getEntitiesAccounts_args(object):
     """
     Attributes:
-     - requestGetTraderAccount
+     - requestGetEntityAccount
 
     """
 
 
-    def __init__(self, requestGetTraderAccount=None,):
-        self.requestGetTraderAccount = requestGetTraderAccount
+    def __init__(self, requestGetEntityAccount=None,):
+        self.requestGetEntityAccount = requestGetEntityAccount
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -332,8 +332,8 @@ class getTradersAccounts_args(object):
                 break
             if fid == 1:
                 if ftype == TType.STRUCT:
-                    self.requestGetTraderAccount = RequestGetTraderAccount()
-                    self.requestGetTraderAccount.read(iprot)
+                    self.requestGetEntityAccount = RequestGetEntityAccount()
+                    self.requestGetEntityAccount.read(iprot)
                 else:
                     iprot.skip(ftype)
             else:
@@ -345,10 +345,10 @@ class getTradersAccounts_args(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('getTradersAccounts_args')
-        if self.requestGetTraderAccount is not None:
-            oprot.writeFieldBegin('requestGetTraderAccount', TType.STRUCT, 1)
-            self.requestGetTraderAccount.write(oprot)
+        oprot.writeStructBegin('getEntitiesAccounts_args')
+        if self.requestGetEntityAccount is not None:
+            oprot.writeFieldBegin('requestGetEntityAccount', TType.STRUCT, 1)
+            self.requestGetEntityAccount.write(oprot)
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
         oprot.writeStructEnd()
@@ -366,14 +366,14 @@ class getTradersAccounts_args(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(getTradersAccounts_args)
-getTradersAccounts_args.thrift_spec = (
+all_structs.append(getEntitiesAccounts_args)
+getEntitiesAccounts_args.thrift_spec = (
     None,  # 0
-    (1, TType.STRUCT, 'requestGetTraderAccount', [RequestGetTraderAccount, None], None, ),  # 1
+    (1, TType.STRUCT, 'requestGetEntityAccount', [RequestGetEntityAccount, None], None, ),  # 1
 )
 
 
-class getTradersAccounts_result(object):
+class getEntitiesAccounts_result(object):
     """
     Attributes:
      - success
@@ -395,7 +395,7 @@ class getTradersAccounts_result(object):
                 break
             if fid == 0:
                 if ftype == TType.STRUCT:
-                    self.success = GetTradersAccountsResponse()
+                    self.success = GetEntitiesAccountsResponse()
                     self.success.read(iprot)
                 else:
                     iprot.skip(ftype)
@@ -408,7 +408,7 @@ class getTradersAccounts_result(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('getTradersAccounts_result')
+        oprot.writeStructBegin('getEntitiesAccounts_result')
         if self.success is not None:
             oprot.writeFieldBegin('success', TType.STRUCT, 0)
             self.success.write(oprot)
@@ -429,9 +429,9 @@ class getTradersAccounts_result(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(getTradersAccounts_result)
-getTradersAccounts_result.thrift_spec = (
-    (0, TType.STRUCT, 'success', [GetTradersAccountsResponse, None], None, ),  # 0
+all_structs.append(getEntitiesAccounts_result)
+getEntitiesAccounts_result.thrift_spec = (
+    (0, TType.STRUCT, 'success', [GetEntitiesAccountsResponse, None], None, ),  # 0
 )
 fix_spec(all_structs)
 del all_structs

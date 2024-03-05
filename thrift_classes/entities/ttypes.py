@@ -17,7 +17,7 @@ from thrift.transport import TTransport
 all_structs = []
 
 
-class AddTrader(object):
+class AddEntity(object):
     """
     Attributes:
      - uniqueId
@@ -51,7 +51,7 @@ class AddTrader(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('AddTrader')
+        oprot.writeStructBegin('AddEntity')
         if self.uniqueId is not None:
             oprot.writeFieldBegin('uniqueId', TType.STRING, 1)
             oprot.writeString(self.uniqueId.encode('utf-8') if sys.version_info[0] == 2 else self.uniqueId)
@@ -76,7 +76,7 @@ class AddTrader(object):
         return not (self == other)
 
 
-class AddTraderResponse(object):
+class AddEntityResponse(object):
     """
     Attributes:
      - status
@@ -124,7 +124,7 @@ class AddTraderResponse(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('AddTraderResponse')
+        oprot.writeStructBegin('AddEntityResponse')
         if self.status is not None:
             oprot.writeFieldBegin('status', TType.I32, 1)
             oprot.writeI32(self.status)
@@ -155,16 +155,16 @@ class AddTraderResponse(object):
         return not (self == other)
 
 
-class RequestGetTraderAccount(object):
+class RequestGetEntityAccount(object):
     """
     Attributes:
-     - traderIds
+     - uniqueIds
 
     """
 
 
-    def __init__(self, traderIds=None,):
-        self.traderIds = traderIds
+    def __init__(self, uniqueIds=None,):
+        self.uniqueIds = uniqueIds
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -177,11 +177,11 @@ class RequestGetTraderAccount(object):
                 break
             if fid == 1:
                 if ftype == TType.LIST:
-                    self.traderIds = []
+                    self.uniqueIds = []
                     (_etype3, _size0) = iprot.readListBegin()
                     for _i4 in range(_size0):
                         _elem5 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                        self.traderIds.append(_elem5)
+                        self.uniqueIds.append(_elem5)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -194,11 +194,11 @@ class RequestGetTraderAccount(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('RequestGetTraderAccount')
-        if self.traderIds is not None:
-            oprot.writeFieldBegin('traderIds', TType.LIST, 1)
-            oprot.writeListBegin(TType.STRING, len(self.traderIds))
-            for iter6 in self.traderIds:
+        oprot.writeStructBegin('RequestGetEntityAccount')
+        if self.uniqueIds is not None:
+            oprot.writeFieldBegin('uniqueIds', TType.LIST, 1)
+            oprot.writeListBegin(TType.STRING, len(self.uniqueIds))
+            for iter6 in self.uniqueIds:
                 oprot.writeString(iter6.encode('utf-8') if sys.version_info[0] == 2 else iter6)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
@@ -206,8 +206,8 @@ class RequestGetTraderAccount(object):
         oprot.writeStructEnd()
 
     def validate(self):
-        if self.traderIds is None:
-            raise TProtocolException(message='Required field traderIds is unset!')
+        if self.uniqueIds is None:
+            raise TProtocolException(message='Required field uniqueIds is unset!')
         return
 
     def __repr__(self):
@@ -222,10 +222,10 @@ class RequestGetTraderAccount(object):
         return not (self == other)
 
 
-class TraderAccount(object):
+class EntityAccount(object):
     """
     Attributes:
-     - traderId
+     - uniqueId
      - currencySymbol
      - genre
      - accountType
@@ -236,8 +236,8 @@ class TraderAccount(object):
     """
 
 
-    def __init__(self, traderId=None, currencySymbol=None, genre=None, accountType=None, balance=None, freezeBalance=None, minBalance=None,):
-        self.traderId = traderId
+    def __init__(self, uniqueId=None, currencySymbol=None, genre=None, accountType=None, balance=None, freezeBalance=None, minBalance=None,):
+        self.uniqueId = uniqueId
         self.currencySymbol = currencySymbol
         self.genre = genre
         self.accountType = accountType
@@ -256,7 +256,7 @@ class TraderAccount(object):
                 break
             if fid == 1:
                 if ftype == TType.STRING:
-                    self.traderId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                    self.uniqueId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
                 else:
                     iprot.skip(ftype)
             elif fid == 2:
@@ -298,10 +298,10 @@ class TraderAccount(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('TraderAccount')
-        if self.traderId is not None:
-            oprot.writeFieldBegin('traderId', TType.STRING, 1)
-            oprot.writeString(self.traderId.encode('utf-8') if sys.version_info[0] == 2 else self.traderId)
+        oprot.writeStructBegin('EntityAccount')
+        if self.uniqueId is not None:
+            oprot.writeFieldBegin('uniqueId', TType.STRING, 1)
+            oprot.writeString(self.uniqueId.encode('utf-8') if sys.version_info[0] == 2 else self.uniqueId)
             oprot.writeFieldEnd()
         if self.currencySymbol is not None:
             oprot.writeFieldBegin('currencySymbol', TType.STRING, 2)
@@ -345,20 +345,20 @@ class TraderAccount(object):
         return not (self == other)
 
 
-class GetTradersAccountsResponse(object):
+class GetEntitiesAccountsResponse(object):
     """
     Attributes:
      - status
      - message
-     - traderAccount
+     - entityAccount
 
     """
 
 
-    def __init__(self, status=None, message=None, traderAccount=None,):
+    def __init__(self, status=None, message=None, entityAccount=None,):
         self.status = status
         self.message = message
-        self.traderAccount = traderAccount
+        self.entityAccount = entityAccount
 
     def read(self, iprot):
         if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
@@ -381,12 +381,12 @@ class GetTradersAccountsResponse(object):
                     iprot.skip(ftype)
             elif fid == 3:
                 if ftype == TType.LIST:
-                    self.traderAccount = []
+                    self.entityAccount = []
                     (_etype10, _size7) = iprot.readListBegin()
                     for _i11 in range(_size7):
-                        _elem12 = TraderAccount()
+                        _elem12 = EntityAccount()
                         _elem12.read(iprot)
-                        self.traderAccount.append(_elem12)
+                        self.entityAccount.append(_elem12)
                     iprot.readListEnd()
                 else:
                     iprot.skip(ftype)
@@ -399,7 +399,7 @@ class GetTradersAccountsResponse(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('GetTradersAccountsResponse')
+        oprot.writeStructBegin('GetEntitiesAccountsResponse')
         if self.status is not None:
             oprot.writeFieldBegin('status', TType.I32, 1)
             oprot.writeI32(self.status)
@@ -408,10 +408,10 @@ class GetTradersAccountsResponse(object):
             oprot.writeFieldBegin('message', TType.STRING, 2)
             oprot.writeString(self.message.encode('utf-8') if sys.version_info[0] == 2 else self.message)
             oprot.writeFieldEnd()
-        if self.traderAccount is not None:
-            oprot.writeFieldBegin('traderAccount', TType.LIST, 3)
-            oprot.writeListBegin(TType.STRUCT, len(self.traderAccount))
-            for iter13 in self.traderAccount:
+        if self.entityAccount is not None:
+            oprot.writeFieldBegin('entityAccount', TType.LIST, 3)
+            oprot.writeListBegin(TType.STRUCT, len(self.entityAccount))
+            for iter13 in self.entityAccount:
                 iter13.write(oprot)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
@@ -431,27 +431,27 @@ class GetTradersAccountsResponse(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(AddTrader)
-AddTrader.thrift_spec = (
+all_structs.append(AddEntity)
+AddEntity.thrift_spec = (
     None,  # 0
     (1, TType.STRING, 'uniqueId', 'UTF8', None, ),  # 1
 )
-all_structs.append(AddTraderResponse)
-AddTraderResponse.thrift_spec = (
+all_structs.append(AddEntityResponse)
+AddEntityResponse.thrift_spec = (
     None,  # 0
     (1, TType.I32, 'status', None, None, ),  # 1
     (2, TType.STRING, 'message', 'UTF8', None, ),  # 2
     (3, TType.STRING, 'uniqueId', 'UTF8', None, ),  # 3
 )
-all_structs.append(RequestGetTraderAccount)
-RequestGetTraderAccount.thrift_spec = (
+all_structs.append(RequestGetEntityAccount)
+RequestGetEntityAccount.thrift_spec = (
     None,  # 0
-    (1, TType.LIST, 'traderIds', (TType.STRING, 'UTF8', False), None, ),  # 1
+    (1, TType.LIST, 'uniqueIds', (TType.STRING, 'UTF8', False), None, ),  # 1
 )
-all_structs.append(TraderAccount)
-TraderAccount.thrift_spec = (
+all_structs.append(EntityAccount)
+EntityAccount.thrift_spec = (
     None,  # 0
-    (1, TType.STRING, 'traderId', 'UTF8', None, ),  # 1
+    (1, TType.STRING, 'uniqueId', 'UTF8', None, ),  # 1
     (2, TType.STRING, 'currencySymbol', 'UTF8', None, ),  # 2
     (3, TType.I32, 'genre', None, None, ),  # 3
     (4, TType.I32, 'accountType', None, None, ),  # 4
@@ -459,12 +459,12 @@ TraderAccount.thrift_spec = (
     (6, TType.STRING, 'freezeBalance', 'UTF8', None, ),  # 6
     (7, TType.STRING, 'minBalance', 'UTF8', None, ),  # 7
 )
-all_structs.append(GetTradersAccountsResponse)
-GetTradersAccountsResponse.thrift_spec = (
+all_structs.append(GetEntitiesAccountsResponse)
+GetEntitiesAccountsResponse.thrift_spec = (
     None,  # 0
     (1, TType.I32, 'status', None, None, ),  # 1
     (2, TType.STRING, 'message', 'UTF8', None, ),  # 2
-    (3, TType.LIST, 'traderAccount', (TType.STRUCT, [TraderAccount, None], False), None, ),  # 3
+    (3, TType.LIST, 'entityAccount', (TType.STRUCT, [EntityAccount, None], False), None, ),  # 3
 )
 fix_spec(all_structs)
 del all_structs

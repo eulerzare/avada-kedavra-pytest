@@ -16,16 +16,16 @@ else:
 from thrift.transport import TTransport, TSocket, TSSLSocket, THttpClient
 from thrift.protocol.TBinaryProtocol import TBinaryProtocol
 
-from traders import TraderService
-from traders.ttypes import *
+from entities import EntityService
+from entities.ttypes import *
 
 if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('')
     print('Usage: ' + sys.argv[0] + ' [-h host[:port]] [-u url] [-f[ramed]] [-s[sl]] [-novalidate] [-ca_certs certs] [-keyfile keyfile] [-certfile certfile] function [arg1 [arg2...]]')
     print('')
     print('Functions:')
-    print('  AddTraderResponse addTrader(AddTrader addTrader)')
-    print('  GetTradersAccountsResponse getTradersAccounts(RequestGetTraderAccount requestGetTraderAccount)')
+    print('  AddEntityResponse addEntity(AddEntity addEntity)')
+    print('  GetEntitiesAccountsResponse getEntitiesAccounts(RequestGetEntityAccount requestGetEntityAccount)')
     print('')
     sys.exit(0)
 
@@ -102,20 +102,20 @@ else:
     else:
         transport = TTransport.TBufferedTransport(socket)
 protocol = TBinaryProtocol(transport)
-client = TraderService.Client(protocol)
+client = EntityService.Client(protocol)
 transport.open()
 
-if cmd == 'addTrader':
+if cmd == 'addEntity':
     if len(args) != 1:
-        print('addTrader requires 1 args')
+        print('addEntity requires 1 args')
         sys.exit(1)
-    pp.pprint(client.addTrader(eval(args[0]),))
+    pp.pprint(client.addEntity(eval(args[0]),))
 
-elif cmd == 'getTradersAccounts':
+elif cmd == 'getEntitiesAccounts':
     if len(args) != 1:
-        print('getTradersAccounts requires 1 args')
+        print('getEntitiesAccounts requires 1 args')
         sys.exit(1)
-    pp.pprint(client.getTradersAccounts(eval(args[0]),))
+    pp.pprint(client.getEntitiesAccounts(eval(args[0]),))
 
 else:
     print('Unrecognized method %s' % cmd)
