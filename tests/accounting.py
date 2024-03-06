@@ -321,5 +321,71 @@ class AccountingTest(unittest.TestCase):
         for a in resp.entityAccount:
             print(a)
 
+    def test_threadsafe1(self):
+        number_of_transactions = 100_000
+        number_of_workers = 8
+        usdt_value = 10000.
+        number_of_fragments = 50_000
+        usdt_fragment = usdt_value / number_of_fragments
+
+        add_currency(AddCurrency(symbol="usdt", name="tether"))
+
+        add_entity(AddEntity(uniqueId="0"))
+        add_entity(AddEntity(uniqueId="1"))
+
+        whole_transactions = []
+        for i_transaction in range(number_of_transactions):
+            trx = list()
+            trx.append(
+                Transaction(
+                    entityId=str(0),
+                    genre=Genre.MAIN,
+                    accountType=AccountType.EXTERNAL,
+                    pairId=1,
+                    currencySymbol="usdt",
+                    amount=str(usdt_fragment),
+                    freezeAmount=str(usdt_fragment),
+                    minAmount=str(-usdt_value),
+                )
+            )
+            trx.append(
+                Transaction(
+                    entityId=str(1),
+                    genre=Genre.MAIN,
+                    accountType=AccountType.EXTERNAL,
+                    pairId=1,
+                    currencySymbol="usdt",
+                    amount=str(-usdt_fragment),
+                    freezeAmount=str(-usdt_fragment),
+                    minAmount=str(-usdt_value),
+                )
+            )
+            whole_transactions.append(
+                TransactionBulk(
+                    uniqueId=str(uuid.uuid4()),
+                    timestamp=1234,
+                    transactions=trx
+                )
+            )
+        # print(submit_transaction(whole_transactions[0]))
+
+        pool: Pool = Pool(processes=number_of_workers)
+        start_time = time.time()
+        responses = pool.map(submit_transaction, whole_transactions)
+        print(responses[0])
+        print("number of successful transactions: ", sum([r.status == 1 for r in responses]))
+        print(time.time() - start_time)
+        # for rr in responses:
+        #     print(rr)
+        pool.close()
+
+        resp = get_entities_accounts(
+            RequestGetEntityAccount(
+                uniqueIds=["0", "1"]
+            )
+        )
+        for a in resp.entityAccount:
+            print(a)
+
     def tearDown(self):
         transport.close()
