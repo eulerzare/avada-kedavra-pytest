@@ -218,14 +218,14 @@ class AccountingTest(unittest.TestCase):
         pool.close()
 
         whole_transactions = []
-        for i_batch in range(number_of_batches):
-            for i_level in range(number_of_entities_in_batch):
-                sign1 = -1. if i_level % 2 == 0 else 1.
-                sign2 = 1. if i_level % 2 == 0 else -1.
+        for i_level in range(number_of_entities_in_batch):
+            sign1 = -1. if i_level % 2 == 0 else 1.
+            sign2 = 1. if i_level % 2 == 0 else -1.
+            for i_batch in range(number_of_batches):
                 trx = list()
                 trx.append(
                     Transaction(
-                        entityId=str(0 + i_batch * number_of_batches),
+                        entityId=str(0 + i_batch * number_of_entities_in_batch),
                         genre=Genre.MAIN,
                         accountType=AccountType.EXTERNAL,
                         pairId=1,
@@ -237,7 +237,7 @@ class AccountingTest(unittest.TestCase):
                 )
                 trx.append(
                     Transaction(
-                        entityId=str(0 + i_batch * number_of_batches),
+                        entityId=str(0 + i_batch * number_of_entities_in_batch),
                         genre=Genre.MAIN,
                         accountType=AccountType.EXTERNAL,
                         pairId=1,
@@ -249,7 +249,7 @@ class AccountingTest(unittest.TestCase):
                 )
                 trx.append(
                     Transaction(
-                        entityId=str(0 + i_batch * number_of_batches),
+                        entityId=str(0 + i_batch * number_of_entities_in_batch),
                         genre=Genre.MAIN,
                         accountType=AccountType.EXTERNAL,
                         pairId=1,
@@ -262,7 +262,7 @@ class AccountingTest(unittest.TestCase):
                 for i_entity_in_batch in range(1, number_of_entities_in_batch):
                     trx.append(
                         Transaction(
-                            entityId=str(i_entity_in_batch + i_batch * number_of_batches),
+                            entityId=str(i_entity_in_batch + i_batch * number_of_entities_in_batch),
                             genre=Genre.MAIN,
                             accountType=AccountType.EXTERNAL,
                             pairId=1,
@@ -274,7 +274,7 @@ class AccountingTest(unittest.TestCase):
                     )
                     trx.append(
                         Transaction(
-                            entityId=str(i_entity_in_batch + i_batch * number_of_batches),
+                            entityId=str(i_entity_in_batch + i_batch * number_of_entities_in_batch),
                             genre=Genre.MAIN,
                             accountType=AccountType.EXTERNAL,
                             pairId=1,
@@ -286,7 +286,7 @@ class AccountingTest(unittest.TestCase):
                     )
                     trx.append(
                         Transaction(
-                            entityId=str(i_entity_in_batch + i_batch * number_of_batches),
+                            entityId=str(i_entity_in_batch + i_batch * number_of_entities_in_batch),
                             genre=Genre.MAIN,
                             accountType=AccountType.EXTERNAL,
                             pairId=1,
@@ -307,7 +307,7 @@ class AccountingTest(unittest.TestCase):
 
         pool: Pool = Pool(processes=number_of_workers)
         start_time = time.time()
-        responses = pool.map(submit_transaction, whole_transactions)
+        responses = pool.map(submit_transaction, whole_transactions, number_of_batches)
         print(time.time() - start_time)
         # for rr in responses:
         #     print(rr)
