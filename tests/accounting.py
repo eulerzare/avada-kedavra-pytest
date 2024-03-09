@@ -218,10 +218,10 @@ class AccountingTest(unittest.TestCase):
         pool.close()
 
         whole_transactions = []
-        for i_level in range(number_of_entities_in_batch):
-            sign1 = -1. if i_level % 2 == 0 else 1.
-            sign2 = 1. if i_level % 2 == 0 else -1.
-            for i_batch in range(number_of_batches):
+        for i_batch in range(number_of_batches):
+            for i_level in range(number_of_entities_in_batch):
+                sign1 = -1. if i_level % 2 == 0 else 1.
+                sign2 = 1. if i_level % 2 == 0 else -1.
                 trx = list()
                 trx.append(
                     Transaction(
