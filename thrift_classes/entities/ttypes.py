@@ -17,144 +17,6 @@ from thrift.transport import TTransport
 all_structs = []
 
 
-class AddEntity(object):
-    """
-    Attributes:
-     - uniqueId
-
-    """
-
-
-    def __init__(self, uniqueId=None,):
-        self.uniqueId = uniqueId
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            if fid == 1:
-                if ftype == TType.STRING:
-                    self.uniqueId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
-            return
-        oprot.writeStructBegin('AddEntity')
-        if self.uniqueId is not None:
-            oprot.writeFieldBegin('uniqueId', TType.STRING, 1)
-            oprot.writeString(self.uniqueId.encode('utf-8') if sys.version_info[0] == 2 else self.uniqueId)
-            oprot.writeFieldEnd()
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        if self.uniqueId is None:
-            raise TProtocolException(message='Required field uniqueId is unset!')
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-
-
-class AddEntityResponse(object):
-    """
-    Attributes:
-     - status
-     - message
-     - uniqueId
-
-    """
-
-
-    def __init__(self, status=None, message=None, uniqueId=None,):
-        self.status = status
-        self.message = message
-        self.uniqueId = uniqueId
-
-    def read(self, iprot):
-        if iprot._fast_decode is not None and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None:
-            iprot._fast_decode(self, iprot, [self.__class__, self.thrift_spec])
-            return
-        iprot.readStructBegin()
-        while True:
-            (fname, ftype, fid) = iprot.readFieldBegin()
-            if ftype == TType.STOP:
-                break
-            if fid == 1:
-                if ftype == TType.I32:
-                    self.status = iprot.readI32()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 2:
-                if ftype == TType.STRING:
-                    self.message = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            elif fid == 3:
-                if ftype == TType.STRING:
-                    self.uniqueId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
-                else:
-                    iprot.skip(ftype)
-            else:
-                iprot.skip(ftype)
-            iprot.readFieldEnd()
-        iprot.readStructEnd()
-
-    def write(self, oprot):
-        if oprot._fast_encode is not None and self.thrift_spec is not None:
-            oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
-            return
-        oprot.writeStructBegin('AddEntityResponse')
-        if self.status is not None:
-            oprot.writeFieldBegin('status', TType.I32, 1)
-            oprot.writeI32(self.status)
-            oprot.writeFieldEnd()
-        if self.message is not None:
-            oprot.writeFieldBegin('message', TType.STRING, 2)
-            oprot.writeString(self.message.encode('utf-8') if sys.version_info[0] == 2 else self.message)
-            oprot.writeFieldEnd()
-        if self.uniqueId is not None:
-            oprot.writeFieldBegin('uniqueId', TType.STRING, 3)
-            oprot.writeString(self.uniqueId.encode('utf-8') if sys.version_info[0] == 2 else self.uniqueId)
-            oprot.writeFieldEnd()
-        oprot.writeFieldStop()
-        oprot.writeStructEnd()
-
-    def validate(self):
-        return
-
-    def __repr__(self):
-        L = ['%s=%r' % (key, value)
-             for key, value in self.__dict__.items()]
-        return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
-
-    def __eq__(self, other):
-        return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
-
-    def __ne__(self, other):
-        return not (self == other)
-
-
 class RequestGetEntityAccount(object):
     """
     Attributes:
@@ -180,7 +42,7 @@ class RequestGetEntityAccount(object):
                     self.uniqueIds = []
                     (_etype3, _size0) = iprot.readListBegin()
                     for _i4 in range(_size0):
-                        _elem5 = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                        _elem5 = iprot.readI64()
                         self.uniqueIds.append(_elem5)
                     iprot.readListEnd()
                 else:
@@ -197,9 +59,9 @@ class RequestGetEntityAccount(object):
         oprot.writeStructBegin('RequestGetEntityAccount')
         if self.uniqueIds is not None:
             oprot.writeFieldBegin('uniqueIds', TType.LIST, 1)
-            oprot.writeListBegin(TType.STRING, len(self.uniqueIds))
+            oprot.writeListBegin(TType.I64, len(self.uniqueIds))
             for iter6 in self.uniqueIds:
-                oprot.writeString(iter6.encode('utf-8') if sys.version_info[0] == 2 else iter6)
+                oprot.writeI64(iter6)
             oprot.writeListEnd()
             oprot.writeFieldEnd()
         oprot.writeFieldStop()
@@ -226,7 +88,7 @@ class EntityAccount(object):
     """
     Attributes:
      - uniqueId
-     - currencySymbol
+     - currency
      - genre
      - accountType
      - balance
@@ -236,9 +98,9 @@ class EntityAccount(object):
     """
 
 
-    def __init__(self, uniqueId=None, currencySymbol=None, genre=None, accountType=None, balance=None, freezeBalance=None, minBalance=None,):
+    def __init__(self, uniqueId=None, currency=None, genre=None, accountType=None, balance=None, freezeBalance=None, minBalance=None,):
         self.uniqueId = uniqueId
-        self.currencySymbol = currencySymbol
+        self.currency = currency
         self.genre = genre
         self.accountType = accountType
         self.balance = balance
@@ -255,13 +117,13 @@ class EntityAccount(object):
             if ftype == TType.STOP:
                 break
             if fid == 1:
-                if ftype == TType.STRING:
-                    self.uniqueId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                if ftype == TType.I64:
+                    self.uniqueId = iprot.readI64()
                 else:
                     iprot.skip(ftype)
             elif fid == 2:
-                if ftype == TType.STRING:
-                    self.currencySymbol = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                if ftype == TType.I32:
+                    self.currency = iprot.readI32()
                 else:
                     iprot.skip(ftype)
             elif fid == 3:
@@ -300,12 +162,12 @@ class EntityAccount(object):
             return
         oprot.writeStructBegin('EntityAccount')
         if self.uniqueId is not None:
-            oprot.writeFieldBegin('uniqueId', TType.STRING, 1)
-            oprot.writeString(self.uniqueId.encode('utf-8') if sys.version_info[0] == 2 else self.uniqueId)
+            oprot.writeFieldBegin('uniqueId', TType.I64, 1)
+            oprot.writeI64(self.uniqueId)
             oprot.writeFieldEnd()
-        if self.currencySymbol is not None:
-            oprot.writeFieldBegin('currencySymbol', TType.STRING, 2)
-            oprot.writeString(self.currencySymbol.encode('utf-8') if sys.version_info[0] == 2 else self.currencySymbol)
+        if self.currency is not None:
+            oprot.writeFieldBegin('currency', TType.I32, 2)
+            oprot.writeI32(self.currency)
             oprot.writeFieldEnd()
         if self.genre is not None:
             oprot.writeFieldBegin('genre', TType.I32, 3)
@@ -431,28 +293,16 @@ class GetEntitiesAccountsResponse(object):
 
     def __ne__(self, other):
         return not (self == other)
-all_structs.append(AddEntity)
-AddEntity.thrift_spec = (
-    None,  # 0
-    (1, TType.STRING, 'uniqueId', 'UTF8', None, ),  # 1
-)
-all_structs.append(AddEntityResponse)
-AddEntityResponse.thrift_spec = (
-    None,  # 0
-    (1, TType.I32, 'status', None, None, ),  # 1
-    (2, TType.STRING, 'message', 'UTF8', None, ),  # 2
-    (3, TType.STRING, 'uniqueId', 'UTF8', None, ),  # 3
-)
 all_structs.append(RequestGetEntityAccount)
 RequestGetEntityAccount.thrift_spec = (
     None,  # 0
-    (1, TType.LIST, 'uniqueIds', (TType.STRING, 'UTF8', False), None, ),  # 1
+    (1, TType.LIST, 'uniqueIds', (TType.I64, None, False), None, ),  # 1
 )
 all_structs.append(EntityAccount)
 EntityAccount.thrift_spec = (
     None,  # 0
-    (1, TType.STRING, 'uniqueId', 'UTF8', None, ),  # 1
-    (2, TType.STRING, 'currencySymbol', 'UTF8', None, ),  # 2
+    (1, TType.I64, 'uniqueId', None, None, ),  # 1
+    (2, TType.I32, 'currency', None, None, ),  # 2
     (3, TType.I32, 'genre', None, None, ),  # 3
     (4, TType.I32, 'accountType', None, None, ),  # 4
     (5, TType.STRING, 'balance', 'UTF8', None, ),  # 5

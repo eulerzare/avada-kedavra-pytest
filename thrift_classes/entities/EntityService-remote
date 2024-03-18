@@ -24,7 +24,6 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
     print('Usage: ' + sys.argv[0] + ' [-h host[:port]] [-u url] [-f[ramed]] [-s[sl]] [-novalidate] [-ca_certs certs] [-keyfile keyfile] [-certfile certfile] function [arg1 [arg2...]]')
     print('')
     print('Functions:')
-    print('  AddEntityResponse addEntity(AddEntity addEntity)')
     print('  GetEntitiesAccountsResponse getEntitiesAccounts(RequestGetEntityAccount requestGetEntityAccount)')
     print('')
     sys.exit(0)
@@ -105,13 +104,7 @@ protocol = TBinaryProtocol(transport)
 client = EntityService.Client(protocol)
 transport.open()
 
-if cmd == 'addEntity':
-    if len(args) != 1:
-        print('addEntity requires 1 args')
-        sys.exit(1)
-    pp.pprint(client.addEntity(eval(args[0]),))
-
-elif cmd == 'getEntitiesAccounts':
+if cmd == 'getEntitiesAccounts':
     if len(args) != 1:
         print('getEntitiesAccounts requires 1 args')
         sys.exit(1)

@@ -24,7 +24,7 @@ class Transaction(object):
      - genre
      - accountType
      - pairId
-     - currencySymbol
+     - currency
      - amount
      - freezeAmount
      - minAmount
@@ -34,12 +34,12 @@ class Transaction(object):
     """
 
 
-    def __init__(self, entityId=None, genre=None, accountType=None, pairId=None, currencySymbol=None, amount=None, freezeAmount=None, minAmount=None, subsidiaryAccount=None, description=None,):
+    def __init__(self, entityId=None, genre=None, accountType=None, pairId=None, currency=None, amount=None, freezeAmount=None, minAmount=None, subsidiaryAccount=None, description=None,):
         self.entityId = entityId
         self.genre = genre
         self.accountType = accountType
         self.pairId = pairId
-        self.currencySymbol = currencySymbol
+        self.currency = currency
         self.amount = amount
         self.freezeAmount = freezeAmount
         self.minAmount = minAmount
@@ -56,8 +56,8 @@ class Transaction(object):
             if ftype == TType.STOP:
                 break
             if fid == 1:
-                if ftype == TType.STRING:
-                    self.entityId = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                if ftype == TType.I64:
+                    self.entityId = iprot.readI64()
                 else:
                     iprot.skip(ftype)
             elif fid == 2:
@@ -76,8 +76,8 @@ class Transaction(object):
                 else:
                     iprot.skip(ftype)
             elif fid == 5:
-                if ftype == TType.STRING:
-                    self.currencySymbol = iprot.readString().decode('utf-8', errors='replace') if sys.version_info[0] == 2 else iprot.readString()
+                if ftype == TType.I32:
+                    self.currency = iprot.readI32()
                 else:
                     iprot.skip(ftype)
             elif fid == 6:
@@ -116,8 +116,8 @@ class Transaction(object):
             return
         oprot.writeStructBegin('Transaction')
         if self.entityId is not None:
-            oprot.writeFieldBegin('entityId', TType.STRING, 1)
-            oprot.writeString(self.entityId.encode('utf-8') if sys.version_info[0] == 2 else self.entityId)
+            oprot.writeFieldBegin('entityId', TType.I64, 1)
+            oprot.writeI64(self.entityId)
             oprot.writeFieldEnd()
         if self.genre is not None:
             oprot.writeFieldBegin('genre', TType.I32, 2)
@@ -131,9 +131,9 @@ class Transaction(object):
             oprot.writeFieldBegin('pairId', TType.I32, 4)
             oprot.writeI32(self.pairId)
             oprot.writeFieldEnd()
-        if self.currencySymbol is not None:
-            oprot.writeFieldBegin('currencySymbol', TType.STRING, 5)
-            oprot.writeString(self.currencySymbol.encode('utf-8') if sys.version_info[0] == 2 else self.currencySymbol)
+        if self.currency is not None:
+            oprot.writeFieldBegin('currency', TType.I32, 5)
+            oprot.writeI32(self.currency)
             oprot.writeFieldEnd()
         if self.amount is not None:
             oprot.writeFieldBegin('amount', TType.STRING, 6)
@@ -167,14 +167,12 @@ class Transaction(object):
             raise TProtocolException(message='Required field accountType is unset!')
         if self.pairId is None:
             raise TProtocolException(message='Required field pairId is unset!')
-        if self.currencySymbol is None:
-            raise TProtocolException(message='Required field currencySymbol is unset!')
+        if self.currency is None:
+            raise TProtocolException(message='Required field currency is unset!')
         if self.amount is None:
             raise TProtocolException(message='Required field amount is unset!')
         if self.freezeAmount is None:
             raise TProtocolException(message='Required field freezeAmount is unset!')
-        if self.minAmount is None:
-            raise TProtocolException(message='Required field minAmount is unset!')
         return
 
     def __repr__(self):
@@ -302,11 +300,11 @@ class TransactionBulk(object):
 all_structs.append(Transaction)
 Transaction.thrift_spec = (
     None,  # 0
-    (1, TType.STRING, 'entityId', 'UTF8', None, ),  # 1
+    (1, TType.I64, 'entityId', None, None, ),  # 1
     (2, TType.I32, 'genre', None, None, ),  # 2
     (3, TType.I32, 'accountType', None, None, ),  # 3
     (4, TType.I32, 'pairId', None, None, ),  # 4
-    (5, TType.STRING, 'currencySymbol', 'UTF8', None, ),  # 5
+    (5, TType.I32, 'currency', None, None, ),  # 5
     (6, TType.STRING, 'amount', 'UTF8', None, ),  # 6
     (7, TType.STRING, 'freezeAmount', 'UTF8', None, ),  # 7
     (8, TType.STRING, 'minAmount', 'UTF8', None, ),  # 8

@@ -17,21 +17,25 @@ all_structs = []
 
 
 class AccountType(object):
+    NULL = 0
     INTERNAL = 1
     EXTERNAL = 2
 
     _VALUES_TO_NAMES = {
+        0: "NULL",
         1: "INTERNAL",
         2: "EXTERNAL",
     }
 
     _NAMES_TO_VALUES = {
+        "NULL": 0,
         "INTERNAL": 1,
         "EXTERNAL": 2,
     }
 
 
 class Genre(object):
+    NULL = 0
     MAIN = 1
     CROSS_MARGIN = 2
     ISOLATED_MARGIN = 3
@@ -41,6 +45,7 @@ class Genre(object):
     OTHER = 7
 
     _VALUES_TO_NAMES = {
+        0: "NULL",
         1: "MAIN",
         2: "CROSS_MARGIN",
         3: "ISOLATED_MARGIN",
@@ -51,6 +56,7 @@ class Genre(object):
     }
 
     _NAMES_TO_VALUES = {
+        "NULL": 0,
         "MAIN": 1,
         "CROSS_MARGIN": 2,
         "ISOLATED_MARGIN": 3,
@@ -58,6 +64,30 @@ class Genre(object):
         "STAKING": 5,
         "PORTFOLIO": 6,
         "OTHER": 7,
+    }
+
+
+class Currency(object):
+    NULL = 0
+    IRT = 1
+    USDT = 2
+    BTC = 3
+    ETH = 4
+
+    _VALUES_TO_NAMES = {
+        0: "NULL",
+        1: "IRT",
+        2: "USDT",
+        3: "BTC",
+        4: "ETH",
+    }
+
+    _NAMES_TO_VALUES = {
+        "NULL": 0,
+        "IRT": 1,
+        "USDT": 2,
+        "BTC": 3,
+        "ETH": 4,
     }
 
 
@@ -101,7 +131,7 @@ class Empty(object):
         return not (self == other)
 
 
-class StatusResponse(object):
+class Response(object):
     """
     Attributes:
      - status
@@ -142,7 +172,7 @@ class StatusResponse(object):
         if oprot._fast_encode is not None and self.thrift_spec is not None:
             oprot.trans.write(oprot._fast_encode(self, [self.__class__, self.thrift_spec]))
             return
-        oprot.writeStructBegin('StatusResponse')
+        oprot.writeStructBegin('Response')
         if self.status is not None:
             oprot.writeFieldBegin('status', TType.I32, 1)
             oprot.writeI32(self.status)
@@ -170,8 +200,8 @@ class StatusResponse(object):
 all_structs.append(Empty)
 Empty.thrift_spec = (
 )
-all_structs.append(StatusResponse)
-StatusResponse.thrift_spec = (
+all_structs.append(Response)
+Response.thrift_spec = (
     None,  # 0
     (1, TType.I32, 'status', None, None, ),  # 1
     (2, TType.STRING, 'message', 'UTF8', None, ),  # 2

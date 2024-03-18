@@ -206,7 +206,7 @@ class submitTransaction_result(object):
                 break
             if fid == 0:
                 if ftype == TType.STRUCT:
-                    self.success = thrift_classes.base.ttypes.StatusResponse()
+                    self.success = thrift_classes.base.ttypes.Response()
                     self.success.read(iprot)
                 else:
                     iprot.skip(ftype)
@@ -242,7 +242,7 @@ class submitTransaction_result(object):
         return not (self == other)
 all_structs.append(submitTransaction_result)
 submitTransaction_result.thrift_spec = (
-    (0, TType.STRUCT, 'success', [thrift_classes.base.ttypes.StatusResponse, None], None, ),  # 0
+    (0, TType.STRUCT, 'success', [thrift_classes.base.ttypes.Response, None], None, ),  # 0
 )
 fix_spec(all_structs)
 del all_structs
