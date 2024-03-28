@@ -32,9 +32,12 @@ transport.open()
 
 def submit_transaction_parse_response(request: TransactionBulk):
     try:
-        return transaction_client.submitTransaction(request).status
+        if transaction_client.submitTransaction(request).status == 1:
+            return request.uniqueId
+        else:
+            return None
     except TTransportException:
-        return -1
+        return None
 
 
 def get_entities_accounts(request: RequestGetEntityAccount):
@@ -100,6 +103,7 @@ class FaultToleranceTest(unittest.TestCase):
         print(time.time() - start_time)
         pool.close()
 
+        responses = [r for r in responses if r is not None]
         with open("responses.spec", "wb") as f:
             pickle.dump(responses, f)
 
@@ -123,7 +127,7 @@ class FaultToleranceTest(unittest.TestCase):
         with open("responses.spec", "rb") as f:
             responses = pickle.load(f)
 
-        whole_transactions = [item for index, item in enumerate(whole_transactions) if responses[index] == 1]
+        whole_transactions = [item for item in whole_transactions if item.uniqueId in responses]
         pool: Pool = Pool(processes=number_of_workers)
         pool.map(submit_transaction_parse_response, whole_transactions)
         pool.close()
