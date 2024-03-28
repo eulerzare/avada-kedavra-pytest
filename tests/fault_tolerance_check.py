@@ -127,7 +127,10 @@ class FaultToleranceTest(unittest.TestCase):
         with open("responses.spec", "rb") as f:
             responses = pickle.load(f)
 
-        whole_transactions = [item for item in whole_transactions if item.uniqueId in responses]
+        whole_transactions = whole_transactions[:len(responses)]
+        for i, r in enumerate(responses):
+            whole_transactions[i].uniqueId = r
+
         pool: Pool = Pool(processes=number_of_workers)
         pool.map(submit_transaction_parse_response, whole_transactions)
         pool.close()
